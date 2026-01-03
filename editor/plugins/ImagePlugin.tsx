@@ -70,11 +70,13 @@ export function ImagePlugin() {
 
   return (
     <>
-      <ToolbarGroup>
-        <Button onClick={() => setIsModalOpen(true)} title="Insert Image">
-          🖼️
-        </Button>
-      </ToolbarGroup>
+      <Button
+        onClick={() => setIsModalOpen(true)}
+        title="Insert Image"
+        className="text-base leading-none w-9 h-9 justify-center p-0 rounded"
+      >
+        🖼️
+      </Button>
 
       <Modal
         isOpen={isModalOpen}

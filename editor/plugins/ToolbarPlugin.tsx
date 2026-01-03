@@ -134,34 +134,39 @@ export function ToolbarPlugin() {
           active={isBold}
           onClick={() => formatText("bold")}
           title="Bold (Ctrl+B)"
+          className="font-bold text-sm"
         >
-          <strong>B</strong>
+          B
         </Button>
         <Button
           active={isItalic}
           onClick={() => formatText("italic")}
           title="Italic (Ctrl+I)"
+          className="italic text-sm"
         >
-          <em>I</em>
+          I
         </Button>
         <Button
           active={isUnderline}
           onClick={() => formatText("underline")}
           title="Underline (Ctrl+U)"
+          className="underline text-sm"
         >
-          <u>U</u>
+          U
         </Button>
         <Button
           active={isStrikethrough}
           onClick={() => formatText("strikethrough")}
           title="Strikethrough"
+          className="line-through text-sm"
         >
-          <s>S</s>
+          S
         </Button>
         <Button
           active={isCode}
           onClick={() => formatText("code")}
           title="Inline Code"
+          className="text-xs font-mono"
         >
           {"</>"}
         </Button>
@@ -183,10 +188,13 @@ export function ToolbarPlugin() {
           value={textColor}
           onSelect={formatColor}
           trigger={
-            <Button title="Text Color">
-              <span className="text-sm">A</span>
+            <Button
+              title="Text Color"
+              className="flex items-center gap-1 text-sm px-2"
+            >
+              <span className="font-semibold">A</span>
               <span
-                className="ml-1 w-3 h-3 border border-gray-300 rounded"
+                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
                 style={{ backgroundColor: textColor || "transparent" }}
               />
             </Button>
@@ -205,8 +213,8 @@ export function ToolbarPlugin() {
           value={backgroundColor}
           onSelect={formatBackground}
           trigger={
-            <Button title="Background Color">
-              <span className="text-sm">BG</span>
+            <Button title="Background Color" className="text-xs font-medium">
+              BG
             </Button>
           }
         />

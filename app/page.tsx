@@ -98,7 +98,7 @@ export default function Home() {
             Lume Editor
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            A world-class rich text editor built with Lexical and Next.js. 
+            A world-class rich text editor built with Lexical and Next.js.
             Experience modern editing with a beautiful, intuitive interface.
           </p>
         </div>
@@ -106,12 +106,20 @@ export default function Home() {
         {/* Controls */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={() => setDarkMode(!darkMode)} className="gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => setDarkMode(!darkMode)}
+              className="gap-2"
+            >
               <span className="text-xl">{darkMode ? "☀️" : "🌙"}</span>
               <span>{darkMode ? "Light" : "Dark"} Mode</span>
             </Button>
             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <div className={`w-2 h-2 rounded-full ${editorContent ? "bg-green-500" : "bg-gray-400"} animate-pulse`} />
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  editorContent ? "bg-green-500" : "bg-gray-400"
+                } animate-pulse`}
+              />
               <span>{editorContent ? "Content saved" : "Ready to edit"}</span>
             </div>
           </div>
@@ -125,14 +133,19 @@ export default function Home() {
             placeholder="Start typing or press '/' for commands..."
             className="min-h-[600px]"
           >
+            {/* Horizontal toolbar - text formatting */}
             <ToolbarPlugin />
             <HistoryPlugin />
             <StructurePlugin />
+
+            {/* Vertical sidebar - content insertion */}
             <ListPlugin />
-            <TablePlugin />
             <CodeBlockPlugin />
             <ImagePlugin />
             <LinkPlugin />
+            <TablePlugin />
+
+            {/* Other plugins */}
             <MarkdownPlugin />
             <SlashCommandPlugin />
             <ExportPlugin onExport={handleExport} />

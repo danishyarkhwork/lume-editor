@@ -28,40 +28,43 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseClasses =
-    "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 hover:scale-105 active:scale-95";
+    "inline-flex items-center justify-center font-medium rounded transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-offset-1 shrink-0";
 
   const variantClasses = {
     default: clsx(
-      "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-gray-200/60 dark:border-gray-700/60 shadow-sm",
-      "hover:bg-white dark:hover:bg-gray-800 hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600",
-      active && "bg-gray-100 dark:bg-gray-700 shadow-inner",
-      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
+      "bg-white/70 dark:bg-gray-800/70 backdrop-blur-md text-gray-700 dark:text-gray-300",
+      "hover:bg-white/90 dark:hover:bg-gray-800/90",
+      active && "bg-gray-100/90 dark:bg-gray-700/90",
+      disabled && "opacity-40 cursor-not-allowed"
     ),
     ghost: clsx(
-      "text-gray-700 dark:text-gray-300",
-      "hover:bg-gray-100/80 dark:hover:bg-gray-800/80 hover:backdrop-blur-sm",
-      active && "bg-gray-200/80 dark:bg-gray-700/80",
-      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
+      "text-gray-700 dark:text-gray-300 bg-transparent",
+      "hover:bg-gray-100/50 dark:hover:bg-gray-800/50 hover:backdrop-blur-sm",
+      active && "bg-gray-200/50 dark:bg-gray-700/50",
+      disabled && "opacity-40 cursor-not-allowed"
     ),
     primary: clsx(
-      "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/30",
-      "hover:from-blue-700 hover:to-blue-800 hover:shadow-xl hover:shadow-blue-500/40",
-      active && "from-blue-800 to-blue-900 shadow-inner",
-      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
+      "bg-blue-600/90 backdrop-blur-md text-white",
+      "hover:bg-blue-700/90",
+      active && "bg-blue-800/90",
+      disabled && "opacity-40 cursor-not-allowed"
     ),
     danger: clsx(
-      "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/30",
-      "hover:from-red-700 hover:to-red-800 hover:shadow-xl hover:shadow-red-500/40",
-      active && "from-red-800 to-red-900 shadow-inner",
-      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
+      "bg-red-600/90 backdrop-blur-md text-white",
+      "hover:bg-red-700/90",
+      active && "bg-red-800/90",
+      disabled && "opacity-40 cursor-not-allowed"
     ),
   };
 
   const sizeClasses = {
-    sm: "px-3 py-1.5 text-xs font-medium",
-    md: "px-4 py-2 text-sm font-medium",
-    lg: "px-5 py-2.5 text-base font-semibold",
+    sm: "px-2 py-1.5 text-xs font-medium h-8 w-8",
+    md: "px-2.5 py-1.5 text-sm font-medium h-8 w-8",
+    lg: "px-3 py-2 text-base font-semibold h-9 w-9",
   };
+
+  // Check if className has custom height
+  const hasCustomHeight = className?.includes("h-") || false;
 
   const focusRingClasses = {
     default: "focus:ring-blue-500",
@@ -75,7 +78,7 @@ export function Button({
       className={clsx(
         baseClasses,
         variantClasses[variant],
-        sizeClasses[size],
+        !hasCustomHeight && sizeClasses[size],
         focusRingClasses[variant],
         className
       )}

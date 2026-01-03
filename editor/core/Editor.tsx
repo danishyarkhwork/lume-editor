@@ -24,7 +24,7 @@
  */
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -149,20 +149,75 @@ export function Editor({
       }),
   };
 
+  // Separate children into horizontal and vertical toolbars
+  const toolbarChildren = useMemo(() => {
+    const horizontal: React.ReactNode[] = [];
+    const vertical: React.ReactNode[] = [];
+    const other: React.ReactNode[] = [];
+
+    React.Children.forEach(children, (child) => {
+      if (!React.isValidElement(child)) {
+        other.push(child);
+        return;
+      }
+
+      const componentName =
+        (child.type as any)?.name ||
+        (child.type as any)?.displayName ||
+        (typeof child.type === "function" ? child.type.name : "") ||
+        "";
+
+      // Content insertion plugins go to vertical sidebar
+      if (
+        componentName.includes("ListPlugin") ||
+        componentName.includes("CodeBlockPlugin") ||
+        componentName.includes("ImagePlugin") ||
+        componentName.includes("LinkPlugin") ||
+        componentName.includes("TablePlugin")
+      ) {
+        vertical.push(child);
+      }
+      // Formatting plugins go to horizontal toolbar
+      else if (
+        componentName.includes("ToolbarPlugin") ||
+        componentName.includes("HistoryPlugin") ||
+        componentName.includes("StructurePlugin")
+      ) {
+        horizontal.push(child);
+      } else {
+        other.push(child);
+      }
+    });
+
+    return { horizontal, vertical, other };
+  }, [children]);
+
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div className={`editor-wrapper relative ${className}`}>
-        <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden">
-          {/* Toolbar and plugins */}
-          <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-gray-800/60">
-            {children}
+        <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden flex flex-col">
+          {/* Toolbar area */}
+          <div className="sticky top-0 z-10 bg-white/60 dark:bg-gray-950/60 backdrop-blur-xl border-b border-gray-200/40 dark:border-gray-800/40 shadow-sm">
+            <div className="flex items-start">
+              {/* Vertical sidebar toolbar */}
+              {toolbarChildren.vertical.length > 0 && (
+                <div className="flex flex-col gap-1.5 p-2 border-r border-gray-200/40 dark:border-gray-800/40 bg-white/40 dark:bg-gray-900/40 backdrop-blur-md w-12 items-center">
+                  {toolbarChildren.vertical}
+                </div>
+              )}
+
+              {/* Main horizontal toolbar */}
+              <div className="flex-1 flex items-center min-h-[48px] px-1">
+                {toolbarChildren.horizontal}
+              </div>
+            </div>
           </div>
 
           {/* Editor content area */}
-          <div className="editor-inner relative px-8 py-12">
+          <div className="editor-inner relative px-8 py-12 min-h-[500px] flex-1">
             <RichTextPlugin
               contentEditable={
-                <ContentEditable className="editor-input min-h-[400px] focus:outline-none prose prose-lg dark:prose-invert max-w-none" />
+                <ContentEditable className="editor-input min-h-[450px] focus:outline-none prose prose-lg dark:prose-invert max-w-none" />
               }
               placeholder={<Placeholder text={placeholder} />}
               ErrorBoundary={ErrorBoundary}
@@ -171,7 +226,8 @@ export function Editor({
         </div>
       </div>
 
-      {/* Internal plugins */}
+      {/* Internal plugins and other children */}
+      {toolbarChildren.other}
       <HistoryPlugin />
       <EditorInitializer initialContent={initialContent} onChange={onChange} />
     </LexicalComposer>

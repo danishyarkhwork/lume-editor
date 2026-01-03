@@ -81,11 +81,12 @@ export function ListPlugin() {
   return (
     <>
       <LexicalListPlugin />
-      <ToolbarGroup>
+      <div className="flex flex-col gap-1.5 w-full">
         <Button
           active={isBulletList}
           onClick={formatBulletList}
           title="Bullet List"
+          className="text-lg w-9 h-9 justify-center p-0 rounded"
         >
           •
         </Button>
@@ -93,10 +94,11 @@ export function ListPlugin() {
           active={isNumberedList}
           onClick={formatNumberedList}
           title="Numbered List"
+          className="text-sm w-9 h-9 justify-center p-0 rounded"
         >
           1.
         </Button>
-      </ToolbarGroup>
+      </div>
     </>
   );
 }

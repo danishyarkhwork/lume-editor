@@ -47,17 +47,24 @@ export function HistoryPlugin() {
     <>
       <LexicalHistoryPlugin />
       <ToolbarGroup>
-        <Button onClick={handleUndo} disabled={!canUndo} title="Undo (Ctrl+Z)">
+        <Button
+          onClick={handleUndo}
+          disabled={!canUndo}
+          title="Undo (Ctrl+Z)"
+          className="text-base leading-none"
+        >
           ↶
         </Button>
         <Button
           onClick={handleRedo}
           disabled={!canRedo}
           title="Redo (Ctrl+Shift+Z)"
+          className="text-base leading-none"
         >
           ↷
         </Button>
       </ToolbarGroup>
+      <ToolbarDivider />
     </>
   );
 }

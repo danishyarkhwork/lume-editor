@@ -78,15 +78,27 @@ export function CodeBlockPlugin() {
   );
 
   return (
-    <ToolbarGroup>
-      <Button onClick={insertCodeBlock} title="Insert Code Block">
+    <div className="flex flex-col gap-1.5 w-full">
+      <Button
+        onClick={insertCodeBlock}
+        title="Insert Code Block"
+        className="text-xs font-mono w-9 h-9 justify-center p-0 rounded"
+      >
         {"</>"}
       </Button>
       <Dropdown
         options={CODE_LANGUAGES}
         onSelect={updateCodeLanguage}
-        trigger={<Button title="Code Language">Lang</Button>}
+        align="right"
+        trigger={
+          <Button
+            title="Code Language"
+            className="text-xs w-9 h-9 justify-center p-0 rounded"
+          >
+            Lang
+          </Button>
+        }
       />
-    </ToolbarGroup>
+    </div>
   );
 }

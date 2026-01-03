@@ -38,11 +38,13 @@ export function TablePlugin() {
   return (
     <>
       <LexicalTablePlugin />
-      <ToolbarGroup>
-        <Button onClick={() => setIsModalOpen(true)} title="Insert Table">
-          ⧉
-        </Button>
-      </ToolbarGroup>
+      <Button
+        onClick={() => setIsModalOpen(true)}
+        title="Insert Table"
+        className="text-base leading-none w-10 h-10 justify-center p-0"
+      >
+        ⧉
+      </Button>
 
       <Modal
         isOpen={isModalOpen}

@@ -88,11 +88,13 @@ export function LinkPlugin() {
   return (
     <>
       <LexicalLinkPlugin />
-      <ToolbarGroup>
-        <Button onClick={handleOpenModal} title="Insert Link (Ctrl+K)">
-          🔗
-        </Button>
-      </ToolbarGroup>
+      <Button
+        onClick={handleOpenModal}
+        title="Insert Link (Ctrl+K)"
+        className="text-base leading-none w-10 h-10 justify-center p-0"
+      >
+        🔗
+      </Button>
 
       <Modal
         isOpen={isModalOpen}

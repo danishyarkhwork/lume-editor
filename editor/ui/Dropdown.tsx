@@ -82,7 +82,8 @@ export function Dropdown({
                 className={clsx(
                   "w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 rounded-lg mx-1 transition-all duration-150",
                   "hover:bg-gray-100/80 dark:hover:bg-gray-800/80",
-                  value === option.value && "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium",
+                  value === option.value &&
+                    "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium",
                   option.disabled && "opacity-40 cursor-not-allowed",
                   "text-gray-700 dark:text-gray-300"
                 )}
