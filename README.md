@@ -18,9 +18,27 @@ A world-class, production-ready rich text editor built with Lexical and React. F
 - ⚡ **Performance** - Optimized for speed
 - 🎨 **Customizable** - Easy to theme and extend
 
-## 🚀 Quick Start
+## 🚀 Installation
 
-### Installation
+### Option 1: Install from GitHub (Recommended)
+
+Install directly from the GitHub repository:
+
+```bash
+npm install git+https://github.com/danishyarkhwork/lume-editor.git
+```
+
+Or using yarn:
+```bash
+yarn add git+https://github.com/danishyarkhwork/lume-editor.git
+```
+
+Or using pnpm:
+```bash
+pnpm add git+https://github.com/danishyarkhwork/lume-editor.git
+```
+
+### Option 2: Install from npm (when published)
 
 ```bash
 npm install @lume/editor
@@ -30,7 +48,51 @@ yarn add @lume/editor
 pnpm add @lume/editor
 ```
 
-### Basic Usage
+### Option 3: Local Development / Testing
+
+For local development or testing, you can use npm link:
+
+```bash
+# In lume-editor directory
+npm link
+
+# In your project directory
+npm link @lume/editor
+```
+
+### Option 4: Install from Local Path
+
+```bash
+npm install /path/to/lume-editor
+# or
+yarn add /path/to/lume-editor
+```
+
+## 📋 Prerequisites
+
+Before installing, make sure you have:
+
+- **Node.js** 18+ installed
+- **React** 18+ in your project
+- **Tailwind CSS** configured (the editor uses Tailwind for styling)
+
+### Install Required Peer Dependencies
+
+The editor requires React as a peer dependency. Make sure you have it installed:
+
+```bash
+npm install react react-dom
+```
+
+## 🎯 Quick Start
+
+### 1. Install the Package
+
+```bash
+npm install git+https://github.com/danishyarkhwork/lume-editor.git
+```
+
+### 2. Import and Use
 
 ```tsx
 import { Editor, AdvancedToolbarPlugin, HistoryPlugin } from '@lume/editor';
@@ -52,25 +114,32 @@ function MyEditor() {
 }
 ```
 
-## 📦 Installation Options
+### 3. Configure Tailwind CSS (Required)
 
-### From npm (when published)
-```bash
-npm install @lume/editor
+The editor uses Tailwind CSS. Add this to your `tailwind.config.js`:
+
+```js
+module.exports = {
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@lume/editor/**/*.{js,ts,jsx,tsx}', // Add this line
+  ],
+  // ... rest of your config
+}
 ```
 
-### From GitHub
-```bash
-npm install git+https://github.com/danishyarkhwork/lume-editor.git
+### 4. Import Styles
+
+Import the editor styles in your main CSS file or layout:
+
+```css
+@import '@lume/editor/styles';
 ```
 
-### Local Development
-```bash
-# In lume-editor directory
-npm link
+Or in your component:
 
-# In your project
-npm link @lume/editor
+```tsx
+import '@lume/editor/styles';
 ```
 
 ## 🎯 Core Features
