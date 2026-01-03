@@ -1,0 +1,53 @@
+/**
+ * Editor Styles
+ * 
+ * Global styles for the editor component.
+ * These styles work in conjunction with Tailwind classes.
+ */
+
+.editor-root {
+  @apply text-gray-900 dark:text-gray-100;
+}
+
+.editor-root p {
+  @apply leading-relaxed;
+}
+
+.editor-root a {
+  @apply transition-colors duration-200;
+}
+
+.editor-input {
+  @apply focus:outline-none;
+}
+
+.editor-placeholder {
+  @apply text-gray-400 dark:text-gray-500;
+}
+
+/* Selection styles */
+.editor-root ::selection {
+  @apply bg-blue-200 dark:bg-blue-900;
+}
+
+/* Focus styles */
+.editor-input:focus {
+  @apply outline-none;
+}
+
+/* Scrollbar styles for code blocks */
+.editor-root pre::-webkit-scrollbar {
+  @apply h-2;
+}
+
+.editor-root pre::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+.editor-root pre::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 rounded;
+}
+
+.editor-root pre::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
