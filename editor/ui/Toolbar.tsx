@@ -18,7 +18,7 @@ export function Toolbar({ children, className }: ToolbarProps) {
   return (
     <div
       className={clsx(
-        "editor-toolbar flex items-center gap-1 p-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900",
+        "editor-toolbar flex items-center gap-2 px-4 py-3",
         "flex-wrap",
         className
       )}
@@ -29,9 +29,15 @@ export function Toolbar({ children, className }: ToolbarProps) {
 }
 
 export function ToolbarDivider() {
-  return <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />;
+  return (
+    <div className="w-px h-7 bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-700 to-transparent mx-2" />
+  );
 }
 
 export function ToolbarGroup({ children }: { children: React.ReactNode }) {
-  return <div className="flex items-center gap-1">{children}</div>;
+  return (
+    <div className="flex items-center gap-1.5 bg-gray-50/50 dark:bg-gray-900/50 rounded-lg px-2 py-1.5">
+      {children}
+    </div>
+  );
 }

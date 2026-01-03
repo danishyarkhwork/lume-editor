@@ -8,7 +8,7 @@
  * - Handles all node types
  * - Produces clean Markdown
  */
-import { LexicalEditor } from "lexical";
+import { LexicalEditor, $getRoot } from "lexical";
 import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
 
 /**
@@ -20,7 +20,8 @@ import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
 export async function exportMarkdown(editor: LexicalEditor): Promise<string> {
   return new Promise((resolve) => {
     editor.getEditorState().read(() => {
-      const markdown = $convertToMarkdownString(TRANSFORMERS, editor);
+      const root = $getRoot();
+      const markdown = $convertToMarkdownString(TRANSFORMERS, root);
       resolve(markdown);
     });
   });

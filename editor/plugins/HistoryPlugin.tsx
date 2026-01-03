@@ -15,6 +15,7 @@ import React, { useCallback, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { HistoryPlugin as LexicalHistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { mergeRegister } from "@lexical/utils";
+import { UNDO_COMMAND, REDO_COMMAND } from "lexical";
 import { Button } from "../ui/Button";
 import { ToolbarGroup } from "../ui/Toolbar";
 
@@ -35,11 +36,11 @@ export function HistoryPlugin() {
   }, [editor]);
 
   const handleUndo = useCallback(() => {
-    editor.dispatchCommand("UNDO_COMMAND", undefined);
+    editor.dispatchCommand(UNDO_COMMAND, undefined);
   }, [editor]);
 
   const handleRedo = useCallback(() => {
-    editor.dispatchCommand("REDO_COMMAND", undefined);
+    editor.dispatchCommand(REDO_COMMAND, undefined);
   }, [editor]);
 
   return (

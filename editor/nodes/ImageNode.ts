@@ -55,30 +55,37 @@ function ImageComponent({
   height,
   caption,
   alignment,
-}: Omit<ImagePayload, "key">) {
+}: Omit<ImagePayload, "key">): React.JSX.Element {
   const alignmentClass = {
     left: "mx-0 mr-auto",
     center: "mx-auto",
     right: "ml-auto mr-0",
   }[alignment || "center"];
 
-  return (
-    <figure className={`my-4 ${alignmentClass}`} style={{ maxWidth: "100%" }}>
-      <img
-        src={src}
-        alt={alt || ""}
-        width={width}
-        height={height}
-        className="rounded-lg max-w-full h-auto"
-        draggable="false"
-        contentEditable={false}
-      />
-      {caption && (
-        <figcaption className="text-sm text-gray-600 dark:text-gray-400 mt-2 text-center italic">
-          {caption}
-        </figcaption>
-      )}
-    </figure>
+  return React.createElement(
+    "figure",
+    {
+      className: `my-4 ${alignmentClass}`,
+      style: { maxWidth: "100%" },
+    },
+    React.createElement("img", {
+      src: src,
+      alt: alt || "",
+      width: width,
+      height: height,
+      className: "rounded-lg max-w-full h-auto",
+      draggable: false,
+      contentEditable: false,
+    }),
+    caption &&
+      React.createElement(
+        "figcaption",
+        {
+          className:
+            "text-sm text-gray-600 dark:text-gray-400 mt-2 text-center italic",
+        },
+        caption
+      )
   );
 }
 
@@ -167,16 +174,14 @@ export class ImageNode extends DecoratorNode<React.JSX.Element> {
   }
 
   decorate(): React.JSX.Element {
-    return (
-      <ImageComponent
-        src={this.__src}
-        alt={this.__alt}
-        width={this.__width}
-        height={this.__height}
-        caption={this.__caption}
-        alignment={this.__alignment}
-      />
-    );
+    return React.createElement(ImageComponent, {
+      src: this.__src,
+      alt: this.__alt,
+      width: this.__width,
+      height: this.__height,
+      caption: this.__caption,
+      alignment: this.__alignment,
+    });
   }
 
   // Getters

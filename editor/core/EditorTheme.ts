@@ -13,26 +13,26 @@ import type { EditorThemeClasses } from "lexical";
 
 export const editorTheme: EditorThemeClasses = {
   // Root editor container
-  root: "editor-root prose prose-lg max-w-none focus:outline-none",
+  root: "editor-root prose prose-lg dark:prose-invert max-w-none focus:outline-none",
 
   // Text formatting
   text: {
-    bold: "font-bold",
+    bold: "font-bold text-gray-900 dark:text-gray-100",
     italic: "italic",
-    underline: "underline",
-    strikethrough: "line-through",
-    underlineStrikethrough: "underline line-through",
-    code: "bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono",
+    underline: "underline decoration-2 underline-offset-2",
+    strikethrough: "line-through opacity-70",
+    underlineStrikethrough: "underline line-through decoration-2 underline-offset-2",
+    code: "bg-gray-100 dark:bg-gray-800/50 px-2 py-1 rounded-md text-sm font-mono text-pink-600 dark:text-pink-400 border border-gray-200 dark:border-gray-700",
   },
 
   // Headings
   heading: {
-    h1: "text-4xl font-bold mt-8 mb-4",
-    h2: "text-3xl font-bold mt-6 mb-3",
-    h3: "text-2xl font-bold mt-5 mb-2",
-    h4: "text-xl font-bold mt-4 mb-2",
-    h5: "text-lg font-bold mt-3 mb-2",
-    h6: "text-base font-bold mt-2 mb-1",
+    h1: "text-5xl font-bold mt-10 mb-6 tracking-tight bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent",
+    h2: "text-4xl font-bold mt-8 mb-5 tracking-tight",
+    h3: "text-3xl font-semibold mt-7 mb-4",
+    h4: "text-2xl font-semibold mt-6 mb-3",
+    h5: "text-xl font-semibold mt-5 mb-2",
+    h6: "text-lg font-semibold mt-4 mb-2",
   },
 
   // Lists
@@ -48,10 +48,10 @@ export const editorTheme: EditorThemeClasses = {
 
   // Quote
   quote:
-    "border-l-4 border-gray-300 dark:border-gray-600 pl-4 py-2 my-4 italic text-gray-700 dark:text-gray-300",
+    "border-l-4 border-blue-500/50 dark:border-blue-400/50 pl-6 py-3 my-6 italic text-gray-700 dark:text-gray-300 bg-blue-50/30 dark:bg-blue-900/10 rounded-r-lg",
 
   // Code blocks
-  code: "bg-gray-900 dark:bg-gray-950 text-gray-100 p-4 rounded-lg my-4 overflow-x-auto font-mono text-sm",
+  code: "bg-gray-900 dark:bg-gray-950 text-gray-100 p-5 rounded-xl my-6 overflow-x-auto font-mono text-sm shadow-lg border border-gray-800 dark:border-gray-800",
   codeHighlight: {
     atrule: "text-purple-400",
     attr: "text-yellow-400",
@@ -86,19 +86,19 @@ export const editorTheme: EditorThemeClasses = {
 
   // Tables
   table:
-    "border-collapse border border-gray-300 dark:border-gray-700 my-4 w-full",
+    "border-collapse border border-gray-200 dark:border-gray-800 my-6 w-full rounded-lg overflow-hidden shadow-md",
   tableCell:
-    "border border-gray-300 dark:border-gray-700 px-4 py-2 min-w-[50px]",
-  tableCellHeader: "bg-gray-100 dark:bg-gray-800 font-bold",
+    "border border-gray-200 dark:border-gray-800 px-5 py-3 min-w-[50px] bg-white dark:bg-gray-900",
+  tableCellHeader: "bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 font-semibold text-gray-900 dark:text-gray-100",
 
   // Links
-  link: "text-blue-600 dark:text-blue-400 underline cursor-pointer hover:text-blue-800 dark:hover:text-blue-300",
+  link: "text-blue-600 dark:text-blue-400 underline decoration-2 underline-offset-2 cursor-pointer hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200",
 
   // Horizontal rule
-  hr: "border-t border-gray-300 dark:border-gray-700 my-8",
+  hr: "border-t border-gray-200 dark:border-gray-800 my-10 opacity-50",
 
   // Paragraph
-  paragraph: "my-2",
+  paragraph: "my-4 leading-7",
 
   // Mark (highlight)
   mark: "bg-yellow-200 dark:bg-yellow-900",

@@ -68,21 +68,22 @@ export function Dropdown({
       {isOpen && (
         <div
           className={clsx(
-            "absolute z-50 mt-1 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5",
+            "absolute z-50 mt-2 w-64 rounded-xl shadow-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/60 dark:border-gray-800/60",
+            "animate-in fade-in slide-in-from-top-2 duration-200",
             align === "right" ? "right-0" : "left-0"
           )}
         >
-          <div className="py-1" role="menu">
+          <div className="py-2" role="menu">
             {options.map((option) => (
               <button
                 key={option.value}
                 onClick={() => !option.disabled && handleSelect(option.value)}
                 disabled={option.disabled}
                 className={clsx(
-                  "w-full text-left px-4 py-2 text-sm flex items-center",
-                  "hover:bg-gray-100 dark:hover:bg-gray-700",
-                  value === option.value && "bg-gray-100 dark:bg-gray-700",
-                  option.disabled && "opacity-50 cursor-not-allowed",
+                  "w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 rounded-lg mx-1 transition-all duration-150",
+                  "hover:bg-gray-100/80 dark:hover:bg-gray-800/80",
+                  value === option.value && "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium",
+                  option.disabled && "opacity-40 cursor-not-allowed",
                   "text-gray-700 dark:text-gray-300"
                 )}
                 role="menuitem"

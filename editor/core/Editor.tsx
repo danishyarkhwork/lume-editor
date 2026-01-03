@@ -75,7 +75,7 @@ export interface EditorProps {
  */
 function Placeholder({ text }: { text?: string }) {
   return (
-    <div className="editor-placeholder absolute top-4 left-4 text-gray-400 dark:text-gray-500 pointer-events-none select-none">
+    <div className="editor-placeholder absolute top-12 left-8 text-gray-400 dark:text-gray-500 pointer-events-none select-none text-lg font-normal opacity-60">
       {text || "Start typing..."}
     </div>
   );
@@ -152,15 +152,17 @@ export function Editor({
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div className={`editor-wrapper relative ${className}`}>
-        <div className="editor-container relative bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 min-h-[400px]">
+        <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden">
           {/* Toolbar and plugins */}
-          {children}
+          <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-gray-800/60">
+            {children}
+          </div>
 
           {/* Editor content area */}
-          <div className="editor-inner relative p-4">
+          <div className="editor-inner relative px-8 py-12">
             <RichTextPlugin
               contentEditable={
-                <ContentEditable className="editor-input min-h-[300px] focus:outline-none" />
+                <ContentEditable className="editor-input min-h-[400px] focus:outline-none prose prose-lg dark:prose-invert max-w-none" />
               }
               placeholder={<Placeholder text={placeholder} />}
               ErrorBoundary={ErrorBoundary}

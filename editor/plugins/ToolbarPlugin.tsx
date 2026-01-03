@@ -17,9 +17,9 @@ import {
   $getSelection,
   $isRangeSelection,
   FORMAT_TEXT_COMMAND,
-  FORMAT_ELEMENT_COMMAND,
+  TextFormatType,
 } from "lexical";
-import { $isAtNodeEnd } from "@lexical/selection";
+import { $patchStyleText } from "@lexical/selection";
 import { mergeRegister } from "@lexical/utils";
 import { Toolbar, ToolbarDivider, ToolbarGroup } from "../ui/Toolbar";
 import { Button } from "../ui/Button";
@@ -99,7 +99,7 @@ export function ToolbarPlugin() {
     );
   }, [editor, updateToolbar]);
 
-  const formatText = (format: string) => {
+  const formatText = (format: TextFormatType) => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
   };
 
@@ -107,10 +107,8 @@ export function ToolbarPlugin() {
     editor.update(() => {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
-        selection.getNodes().forEach((node) => {
-          if (node.getStyle) {
-            node.setStyle(`color: ${color || ""}`);
-          }
+        $patchStyleText(selection, {
+          color: color || null,
         });
       }
     });
@@ -121,10 +119,8 @@ export function ToolbarPlugin() {
     editor.update(() => {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
-        selection.getNodes().forEach((node) => {
-          if (node.getStyle) {
-            node.setStyle(`background-color: ${color || ""}`);
-          }
+        $patchStyleText(selection, {
+          "background-color": color || null,
         });
       }
     });

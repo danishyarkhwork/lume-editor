@@ -14,11 +14,8 @@
 import React, { useCallback, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { TablePlugin as LexicalTablePlugin } from "@lexical/react/LexicalTablePlugin";
-import {
-  INSERT_TABLE_COMMAND,
-  $getSelection,
-  $isRangeSelection,
-} from "lexical";
+import { $getSelection, $isRangeSelection } from "lexical";
+import { INSERT_TABLE_COMMAND } from "@lexical/table";
 import { Button } from "../ui/Button";
 import { ToolbarGroup } from "../ui/Toolbar";
 import { Modal } from "../ui/Modal";

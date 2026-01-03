@@ -28,39 +28,39 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseClasses =
-    "inline-flex items-center justify-center font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
+    "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 hover:scale-105 active:scale-95";
 
   const variantClasses = {
     default: clsx(
-      "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600",
-      "hover:bg-gray-50 dark:hover:bg-gray-700",
-      active && "bg-gray-100 dark:bg-gray-700",
-      disabled && "opacity-50 cursor-not-allowed"
+      "bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-gray-200/60 dark:border-gray-700/60 shadow-sm",
+      "hover:bg-white dark:hover:bg-gray-800 hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600",
+      active && "bg-gray-100 dark:bg-gray-700 shadow-inner",
+      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
     ),
     ghost: clsx(
       "text-gray-700 dark:text-gray-300",
-      "hover:bg-gray-100 dark:hover:bg-gray-800",
-      active && "bg-gray-200 dark:bg-gray-700",
-      disabled && "opacity-50 cursor-not-allowed"
+      "hover:bg-gray-100/80 dark:hover:bg-gray-800/80 hover:backdrop-blur-sm",
+      active && "bg-gray-200/80 dark:bg-gray-700/80",
+      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
     ),
     primary: clsx(
-      "bg-blue-600 text-white",
-      "hover:bg-blue-700",
-      active && "bg-blue-800",
-      disabled && "opacity-50 cursor-not-allowed"
+      "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/30",
+      "hover:from-blue-700 hover:to-blue-800 hover:shadow-xl hover:shadow-blue-500/40",
+      active && "from-blue-800 to-blue-900 shadow-inner",
+      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
     ),
     danger: clsx(
-      "bg-red-600 text-white",
-      "hover:bg-red-700",
-      active && "bg-red-800",
-      disabled && "opacity-50 cursor-not-allowed"
+      "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/30",
+      "hover:from-red-700 hover:to-red-800 hover:shadow-xl hover:shadow-red-500/40",
+      active && "from-red-800 to-red-900 shadow-inner",
+      disabled && "opacity-40 cursor-not-allowed hover:scale-100"
     ),
   };
 
   const sizeClasses = {
-    sm: "px-2 py-1 text-sm",
-    md: "px-3 py-1.5 text-sm",
-    lg: "px-4 py-2 text-base",
+    sm: "px-3 py-1.5 text-xs font-medium",
+    md: "px-4 py-2 text-sm font-medium",
+    lg: "px-5 py-2.5 text-base font-semibold",
   };
 
   const focusRingClasses = {

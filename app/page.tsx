@@ -90,30 +90,35 @@ export default function Home() {
   }, [darkMode]);
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 py-12 px-4">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+        <div className="mb-10 text-center">
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-100 dark:via-gray-200 dark:to-gray-100 bg-clip-text text-transparent">
             Lume Editor
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            A world-class rich text editor built with Lexical and Next.js
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            A world-class rich text editor built with Lexical and Next.js. 
+            Experience modern editing with a beautiful, intuitive interface.
           </p>
         </div>
 
         {/* Controls */}
-        <div className="mb-4 flex items-center gap-4">
-          <Button variant="ghost" onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? "☀️" : "🌙"} {darkMode ? "Light" : "Dark"} Mode
-          </Button>
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            {editorContent ? "Content saved" : "Start typing..."}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" onClick={() => setDarkMode(!darkMode)} className="gap-2">
+              <span className="text-xl">{darkMode ? "☀️" : "🌙"}</span>
+              <span>{darkMode ? "Light" : "Dark"} Mode</span>
+            </Button>
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className={`w-2 h-2 rounded-full ${editorContent ? "bg-green-500" : "bg-gray-400"} animate-pulse`} />
+              <span>{editorContent ? "Content saved" : "Ready to edit"}</span>
+            </div>
           </div>
         </div>
 
         {/* Editor */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <div className="overflow-hidden">
           <Editor
             initialContent={null}
             onChange={handleChange}

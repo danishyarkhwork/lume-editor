@@ -76,7 +76,7 @@ export function Modal({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity animate-in fade-in"
         onClick={onClose}
       />
 
@@ -85,20 +85,21 @@ export function Modal({
         <div
           ref={modalRef}
           className={clsx(
-            "relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full",
+            "relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/60 dark:border-gray-800/60 w-full",
+            "animate-in fade-in zoom-in-95 duration-200",
             sizeClasses[size]
           )}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           {title && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-r from-gray-50/50 to-transparent dark:from-gray-900/50">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
                 {title}
               </h3>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <svg
                   className="w-6 h-6"
@@ -118,11 +119,11 @@ export function Modal({
           )}
 
           {/* Content */}
-          <div className="px-6 py-4">{children}</div>
+          <div className="px-6 py-6">{children}</div>
 
           {/* Footer */}
           {footer && (
-            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-5 border-t border-gray-200/60 dark:border-gray-800/60 bg-gradient-to-r from-transparent to-gray-50/50 dark:to-gray-900/50">
               {footer}
             </div>
           )}
