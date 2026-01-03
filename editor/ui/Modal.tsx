@@ -7,6 +7,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { clsx } from "clsx";
 import { Button } from "./Button";
 
@@ -67,9 +68,9 @@ export function Modal({
     xl: "max-w-4xl",
   };
 
-  return (
+  const modalContent = (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto"
+      className="fixed inset-0 z-[9999] overflow-y-auto"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -81,12 +82,12 @@ export function Modal({
       />
 
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="flex min-h-full items-center justify-center p-4 pointer-events-none">
         <div
           ref={modalRef}
           className={clsx(
             "relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/60 dark:border-gray-800/60 w-full",
-            "animate-in fade-in zoom-in-95 duration-200",
+            "animate-in fade-in zoom-in-95 duration-200 pointer-events-auto",
             sizeClasses[size]
           )}
           onClick={(e) => e.stopPropagation()}
@@ -131,4 +132,11 @@ export function Modal({
       </div>
     </div>
   );
+
+  // Render modal outside the editor container using portal
+  if (typeof document !== "undefined") {
+    return createPortal(modalContent, document.body);
+  }
+
+  return null;
 }

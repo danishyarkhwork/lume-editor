@@ -1,0 +1,35 @@
+# Development files
+app/
+scripts/
+.next/
+node_modules/
+*.config.js
+*.config.ts
+*.config.mjs
+tsconfig.json
+tsconfig.lib.json
+package.json
+package-lib.json
+
+# Source files (only include compiled dist)
+editor/
+!dist/
+
+# Documentation
+README-INSTALLATION.md
+SETUP.md
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
