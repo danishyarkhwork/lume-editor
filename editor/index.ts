@@ -13,6 +13,7 @@ export { getEditorNodes, defaultEditorConfig } from "./core/EditorConfig";
 
 // Plugins
 export { ToolbarPlugin } from "./plugins/ToolbarPlugin";
+export { AdvancedToolbarPlugin } from "./plugins/AdvancedToolbarPlugin";
 export { HistoryPlugin } from "./plugins/HistoryPlugin";
 export { ListPlugin } from "./plugins/ListPlugin";
 export { TablePlugin } from "./plugins/TablePlugin";

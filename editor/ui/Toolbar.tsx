@@ -18,8 +18,9 @@ export function Toolbar({ children, className }: ToolbarProps) {
   return (
     <div
       className={clsx(
-        "editor-toolbar flex items-center gap-0 px-3 py-2",
-        "flex-wrap",
+        "editor-toolbar flex items-center gap-0 px-4 py-2.5",
+        "flex-wrap overflow-x-auto scrollbar-hide",
+        "scroll-smooth",
         className
       )}
     >

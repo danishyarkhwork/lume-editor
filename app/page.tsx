@@ -9,7 +9,7 @@
 import React, { useState, useCallback } from "react";
 import { Editor } from "@/editor";
 import {
-  ToolbarPlugin,
+  AdvancedToolbarPlugin,
   HistoryPlugin,
   ListPlugin,
   TablePlugin,
@@ -133,8 +133,8 @@ export default function Home() {
             placeholder="Start typing or press '/' for commands..."
             className="min-h-[600px]"
           >
-            {/* Horizontal toolbar - all formatting and content insertion */}
-            <ToolbarPlugin />
+            {/* Advanced horizontal toolbar - all formatting and content insertion */}
+            <AdvancedToolbarPlugin />
             <HistoryPlugin />
             <StructurePlugin />
             <ListPlugin />

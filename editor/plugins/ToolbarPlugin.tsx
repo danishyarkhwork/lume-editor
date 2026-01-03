@@ -8,6 +8,8 @@
  * - Uses Lexical's command system for formatting
  * - Tracks active formatting states
  * - Integrates with other plugins via toolbar
+ *
+ * Note: This is the basic toolbar. For advanced features, use AdvancedToolbarPlugin.
  */
 "use client";
 
