@@ -86,6 +86,7 @@ export function ListPlugin() {
           active={isBulletList}
           onClick={formatBulletList}
           title="Bullet List"
+          variant="ghost"
           className="text-lg w-9 h-9 justify-center p-0 rounded"
         >
           •
@@ -94,6 +95,7 @@ export function ListPlugin() {
           active={isNumberedList}
           onClick={formatNumberedList}
           title="Numbered List"
+          variant="ghost"
           className="text-sm w-9 h-9 justify-center p-0 rounded"
         >
           1.

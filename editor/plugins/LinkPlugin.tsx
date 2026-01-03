@@ -91,7 +91,8 @@ export function LinkPlugin() {
       <Button
         onClick={handleOpenModal}
         title="Insert Link (Ctrl+K)"
-        className="text-base leading-none w-10 h-10 justify-center p-0"
+        variant="ghost"
+        className="text-base leading-none w-9 h-9 justify-center p-0 rounded"
       >
         🔗
       </Button>

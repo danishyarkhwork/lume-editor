@@ -134,6 +134,7 @@ export function ToolbarPlugin() {
           active={isBold}
           onClick={() => formatText("bold")}
           title="Bold (Ctrl+B)"
+          variant="ghost"
           className="font-bold text-sm"
         >
           B
@@ -142,6 +143,7 @@ export function ToolbarPlugin() {
           active={isItalic}
           onClick={() => formatText("italic")}
           title="Italic (Ctrl+I)"
+          variant="ghost"
           className="italic text-sm"
         >
           I
@@ -150,6 +152,7 @@ export function ToolbarPlugin() {
           active={isUnderline}
           onClick={() => formatText("underline")}
           title="Underline (Ctrl+U)"
+          variant="ghost"
           className="underline text-sm"
         >
           U
@@ -158,6 +161,7 @@ export function ToolbarPlugin() {
           active={isStrikethrough}
           onClick={() => formatText("strikethrough")}
           title="Strikethrough"
+          variant="ghost"
           className="line-through text-sm"
         >
           S
@@ -166,6 +170,7 @@ export function ToolbarPlugin() {
           active={isCode}
           onClick={() => formatText("code")}
           title="Inline Code"
+          variant="ghost"
           className="text-xs font-mono"
         >
           {"</>"}
@@ -190,9 +195,10 @@ export function ToolbarPlugin() {
           trigger={
             <Button
               title="Text Color"
-              className="flex items-center gap-1 text-sm px-2"
+              variant="ghost"
+              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px]"
             >
-              <span className="font-semibold">A</span>
+              <span className="font-semibold text-sm">A</span>
               <span
                 className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
                 style={{ backgroundColor: textColor || "transparent" }}
@@ -213,8 +219,16 @@ export function ToolbarPlugin() {
           value={backgroundColor}
           onSelect={formatBackground}
           trigger={
-            <Button title="Background Color" className="text-xs font-medium">
-              BG
+            <Button
+              title="Background Color"
+              variant="ghost"
+              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px]"
+            >
+              <span className="font-medium text-xs">BG</span>
+              <span
+                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
+                style={{ backgroundColor: backgroundColor || "transparent" }}
+              />
             </Button>
           }
         />

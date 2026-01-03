@@ -82,6 +82,7 @@ export function CodeBlockPlugin() {
       <Button
         onClick={insertCodeBlock}
         title="Insert Code Block"
+        variant="ghost"
         className="text-xs font-mono w-9 h-9 justify-center p-0 rounded"
       >
         {"</>"}
@@ -93,6 +94,7 @@ export function CodeBlockPlugin() {
         trigger={
           <Button
             title="Code Language"
+            variant="ghost"
             className="text-xs w-9 h-9 justify-center p-0 rounded"
           >
             Lang

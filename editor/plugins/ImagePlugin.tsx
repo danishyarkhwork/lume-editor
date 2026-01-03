@@ -73,6 +73,7 @@ export function ImagePlugin() {
       <Button
         onClick={() => setIsModalOpen(true)}
         title="Insert Image"
+        variant="ghost"
         className="text-base leading-none w-9 h-9 justify-center p-0 rounded"
       >
         🖼️

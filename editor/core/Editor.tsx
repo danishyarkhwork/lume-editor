@@ -197,17 +197,17 @@ export function Editor({
       <div className={`editor-wrapper relative ${className}`}>
         <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden flex flex-col">
           {/* Toolbar area */}
-          <div className="sticky top-0 z-10 bg-white/60 dark:bg-gray-950/60 backdrop-blur-xl border-b border-gray-200/40 dark:border-gray-800/40 shadow-sm">
+          <div className="sticky top-0 z-10 bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
             <div className="flex items-start">
               {/* Vertical sidebar toolbar */}
               {toolbarChildren.vertical.length > 0 && (
-                <div className="flex flex-col gap-1.5 p-2 border-r border-gray-200/40 dark:border-gray-800/40 bg-white/40 dark:bg-gray-900/40 backdrop-blur-md w-12 items-center">
+                <div className="flex flex-col gap-1.5 p-2 border-r border-gray-200/50 dark:border-gray-800/50 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md w-12 items-center">
                   {toolbarChildren.vertical}
                 </div>
               )}
 
               {/* Main horizontal toolbar */}
-              <div className="flex-1 flex items-center min-h-[48px] px-1">
+              <div className="flex-1 flex items-center min-h-[44px]">
                 {toolbarChildren.horizontal}
               </div>
             </div>

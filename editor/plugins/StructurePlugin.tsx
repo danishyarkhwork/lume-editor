@@ -94,12 +94,30 @@ export function StructurePlugin() {
         <Dropdown
           options={HEADING_OPTIONS}
           onSelect={formatHeading}
-          trigger={<Button title="Heading" className="text-sm font-semibold">H</Button>}
+          trigger={
+            <Button
+              title="Heading"
+              variant="ghost"
+              className="text-sm font-semibold"
+            >
+              H
+            </Button>
+          }
         />
-        <Button onClick={insertQuote} title="Insert Quote" className="text-lg leading-none">
+        <Button
+          onClick={insertQuote}
+          title="Insert Quote"
+          variant="ghost"
+          className="text-lg leading-none"
+        >
           "
         </Button>
-        <Button onClick={insertDivider} title="Insert Divider" className="text-lg font-light leading-none">
+        <Button
+          onClick={insertDivider}
+          title="Insert Divider"
+          variant="ghost"
+          className="text-lg font-light leading-none"
+        >
           —
         </Button>
         <Dropdown
@@ -112,7 +130,11 @@ export function StructurePlugin() {
           onSelect={(value) =>
             insertCallout(value as "info" | "warning" | "success" | "error")
           }
-          trigger={<Button title="Callout" className="text-base">💬</Button>}
+          trigger={
+            <Button title="Callout" variant="ghost" className="text-base">
+              💬
+            </Button>
+          }
         />
       </ToolbarGroup>
       <ToolbarDivider />

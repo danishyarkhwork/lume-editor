@@ -32,15 +32,15 @@ export function Button({
 
   const variantClasses = {
     default: clsx(
-      "bg-white/70 dark:bg-gray-800/70 backdrop-blur-md text-gray-700 dark:text-gray-300",
-      "hover:bg-white/90 dark:hover:bg-gray-800/90",
-      active && "bg-gray-100/90 dark:bg-gray-700/90",
+      "text-gray-700 dark:text-gray-300 bg-transparent",
+      "hover:bg-gray-100/60 dark:hover:bg-gray-800/60",
+      active && "bg-gray-200/80 dark:bg-gray-700/80",
       disabled && "opacity-40 cursor-not-allowed"
     ),
     ghost: clsx(
       "text-gray-700 dark:text-gray-300 bg-transparent",
-      "hover:bg-gray-100/50 dark:hover:bg-gray-800/50 hover:backdrop-blur-sm",
-      active && "bg-gray-200/50 dark:bg-gray-700/50",
+      "hover:bg-gray-100/60 dark:hover:bg-gray-800/60",
+      active && "bg-gray-200/80 dark:bg-gray-700/80",
       disabled && "opacity-40 cursor-not-allowed"
     ),
     primary: clsx(
@@ -58,9 +58,9 @@ export function Button({
   };
 
   const sizeClasses = {
-    sm: "px-2 py-1.5 text-xs font-medium h-8 w-8",
-    md: "px-2.5 py-1.5 text-sm font-medium h-8 w-8",
-    lg: "px-3 py-2 text-base font-semibold h-9 w-9",
+    sm: "px-2 py-1.5 text-xs font-medium h-8 min-w-[32px]",
+    md: "px-2.5 py-1.5 text-sm font-medium h-8 min-w-[32px]",
+    lg: "px-3 py-2 text-base font-semibold h-9 min-w-[36px]",
   };
 
   // Check if className has custom height

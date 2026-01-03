@@ -17,7 +17,7 @@ import { HistoryPlugin as LexicalHistoryPlugin } from "@lexical/react/LexicalHis
 import { mergeRegister } from "@lexical/utils";
 import { UNDO_COMMAND, REDO_COMMAND } from "lexical";
 import { Button } from "../ui/Button";
-import { ToolbarGroup } from "../ui/Toolbar";
+import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 
 export function HistoryPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -51,6 +51,7 @@ export function HistoryPlugin() {
           onClick={handleUndo}
           disabled={!canUndo}
           title="Undo (Ctrl+Z)"
+          variant="ghost"
           className="text-base leading-none"
         >
           ↶
@@ -59,6 +60,7 @@ export function HistoryPlugin() {
           onClick={handleRedo}
           disabled={!canRedo}
           title="Redo (Ctrl+Shift+Z)"
+          variant="ghost"
           className="text-base leading-none"
         >
           ↷
