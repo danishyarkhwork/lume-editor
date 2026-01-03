@@ -15,6 +15,7 @@ import { CodeNode, CodeHighlightNode } from "@lexical/code";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { LinkNode } from "@lexical/link";
 import { HorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode";
+import { LexicalEditor } from "lexical";
 import { ImageNode } from "../nodes/ImageNode";
 import { CalloutNode } from "../nodes/CalloutNode";
 
@@ -50,7 +51,7 @@ export interface EditorConfigOptions {
   namespace?: string;
   theme?: any;
   editable?: boolean;
-  onError?: (error: Error) => void;
+  onError?: (error: Error, editor: LexicalEditor) => void;
 }
 
 /**
@@ -59,7 +60,7 @@ export interface EditorConfigOptions {
 export const defaultEditorConfig: EditorConfigOptions = {
   namespace: "LumeEditor",
   editable: true,
-  onError: (error: Error) => {
+  onError: (error: Error, editor: LexicalEditor) => {
     console.error("Lexical Editor Error:", error);
   },
 };

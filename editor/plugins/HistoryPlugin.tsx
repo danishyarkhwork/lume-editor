@@ -14,7 +14,6 @@
 import React, { useCallback, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { HistoryPlugin as LexicalHistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { $getRoot, $getSelection } from "lexical";
 import { mergeRegister } from "@lexical/utils";
 import { Button } from "../ui/Button";
 import { ToolbarGroup } from "../ui/Toolbar";
@@ -24,30 +23,16 @@ export function HistoryPlugin() {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
 
-  const updateHistoryState = useCallback(() => {
-    const historyState = editor.getEditorState().read(() => {
-      return {
-        canUndo: editor.getEditorState()._historyState?.undoStack?.length > 0,
-        canRedo: editor.getEditorState()._historyState?.redoStack?.length > 0,
-      };
-    });
-
-    // Check history state via editor's internal state
-    editor.getEditorState().read(() => {
-      const root = $getRoot();
-      // Lexical's history is managed internally, we'll use a different approach
-      setCanUndo(true); // Simplified - would need to track actual history state
-      setCanRedo(true); // Simplified - would need to track actual history state
-    });
-  }, [editor]);
-
   React.useEffect(() => {
     return mergeRegister(
       editor.registerUpdateListener(() => {
-        updateHistoryState();
+        // Lexical's HistoryPlugin manages undo/redo internally
+        // We'll enable buttons by default - in production, track history state
+        setCanUndo(true);
+        setCanRedo(true);
       })
     );
-  }, [editor, updateHistoryState]);
+  }, [editor]);
 
   const handleUndo = useCallback(() => {
     editor.dispatchCommand("UNDO_COMMAND", undefined);

@@ -21,6 +21,7 @@ export { ImagePlugin } from "./plugins/ImagePlugin";
 export { LinkPlugin } from "./plugins/LinkPlugin";
 export { MarkdownPlugin } from "./plugins/MarkdownPlugin";
 export { SlashCommandPlugin } from "./plugins/SlashCommandPlugin";
+export { StructurePlugin } from "./plugins/StructurePlugin";
 
 // Nodes
 export { ImageNode, $createImageNode, $isImageNode } from "./nodes/ImageNode";

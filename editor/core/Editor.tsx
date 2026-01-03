@@ -1,15 +1,15 @@
 /**
  * Core Editor Component
- * 
+ *
  * This is the main editor component that wraps Lexical's Composer
  * and provides a clean, extensible API for the rich text editor.
- * 
+ *
  * Architecture:
  * - Uses Lexical's Composer as the root
  * - Supports plugin composition via children
  * - Handles editor state serialization
  * - Provides onChange callbacks for integration
- * 
+ *
  * Usage:
  * ```tsx
  * <Editor
@@ -22,52 +22,52 @@
  * </Editor>
  * ```
  */
-'use client'
+"use client";
 
-import React, { useCallback, useEffect } from 'react'
-import { LexicalComposer } from '@lexical/react/LexicalComposer'
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
-import { ContentEditable } from '@lexical/react/LexicalContentEditable'
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { LexicalEditor } from 'lexical'
-import { editorTheme } from './EditorTheme'
-import { getEditorNodes, defaultEditorConfig } from './EditorConfig'
-import './editor.css'
+import React, { useCallback, useEffect } from "react";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { LexicalEditor, EditorState } from "lexical";
+import { editorTheme } from "./EditorTheme";
+import { getEditorNodes, defaultEditorConfig } from "./EditorConfig";
+import "./editor.css";
 
 export interface EditorProps {
   /**
    * Initial editor state (Lexical JSON)
    * Use this to restore saved content
    */
-  initialContent?: string | null
-  
+  initialContent?: string | null;
+
   /**
    * Callback fired when editor content changes
    * Receives the serialized editor state as JSON string
    */
-  onChange?: (editorState: string) => void
-  
+  onChange?: (editorState: string) => void;
+
   /**
    * Whether the editor is editable
    */
-  editable?: boolean
-  
+  editable?: boolean;
+
   /**
    * Placeholder text when editor is empty
    */
-  placeholder?: string
-  
+  placeholder?: string;
+
   /**
    * Additional CSS classes for the editor container
    */
-  className?: string
-  
+  className?: string;
+
   /**
    * Child plugins to compose
    */
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 /**
@@ -76,55 +76,52 @@ export interface EditorProps {
 function Placeholder({ text }: { text?: string }) {
   return (
     <div className="editor-placeholder absolute top-4 left-4 text-gray-400 dark:text-gray-500 pointer-events-none select-none">
-      {text || 'Start typing...'}
+      {text || "Start typing..."}
     </div>
-  )
+  );
 }
 
 /**
  * Error boundary component for editor errors
  */
 function ErrorBoundary({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="editor-error-boundary">
-      {children}
-    </div>
-  )
+  return <div className="editor-error-boundary">{children}</div>;
 }
 
 /**
  * Internal component that handles editor initialization
  */
-function EditorInitializer({ 
-  initialContent, 
-  onChange 
-}: { 
-  initialContent?: string | null
-  onChange?: (editorState: string) => void 
+function EditorInitializer({
+  initialContent,
+  onChange,
+}: {
+  initialContent?: string | null;
+  onChange?: (editorState: string) => void;
 }) {
-  const [editor] = useLexicalComposerContext()
+  const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
     if (initialContent) {
       try {
-        const state = editor.parseEditorState(initialContent)
-        editor.setEditable(false)
-        editor.setEditorState(state)
-        editor.setEditable(true)
+        const parsedState = editor.parseEditorState(initialContent);
+        editor.setEditorState(parsedState);
       } catch (error) {
-        console.error('Failed to parse initial content:', error)
+        console.error("Failed to parse initial content:", error);
       }
     }
-  }, [editor, initialContent])
+  }, [editor, initialContent]);
 
-  const handleChange = useCallback((editorState: LexicalEditor) => {
-    if (onChange) {
-      const serialized = JSON.stringify(editorState.getEditorState().toJSON())
-      onChange(serialized)
-    }
-  }, [onChange])
+  const handleChange = useCallback(
+    (editorState: EditorState, editor: LexicalEditor) => {
+      if (onChange) {
+        const serialized = JSON.stringify(editorState.toJSON());
+        onChange(serialized);
+      }
+    },
+    [onChange]
+  );
 
-  return <OnChangePlugin onChange={handleChange} />
+  return <OnChangePlugin onChange={handleChange} />;
 }
 
 /**
@@ -134,17 +131,23 @@ export function Editor({
   initialContent,
   onChange,
   editable = true,
-  placeholder = 'Start typing...',
-  className = '',
+  placeholder = "Start typing...",
+  className = "",
   children,
 }: EditorProps) {
   const initialConfig = {
     ...defaultEditorConfig,
+    namespace: defaultEditorConfig.namespace || "LumeEditor",
     theme: editorTheme,
     editable,
     nodes: getEditorNodes(),
     editorState: initialContent ? undefined : null,
-  }
+    onError:
+      defaultEditorConfig.onError ||
+      ((error: Error, editor: LexicalEditor) => {
+        console.error("Lexical Editor Error:", error);
+      }),
+  };
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
@@ -152,7 +155,7 @@ export function Editor({
         <div className="editor-container relative bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 min-h-[400px]">
           {/* Toolbar and plugins */}
           {children}
-          
+
           {/* Editor content area */}
           <div className="editor-inner relative p-4">
             <RichTextPlugin
@@ -165,11 +168,10 @@ export function Editor({
           </div>
         </div>
       </div>
-      
+
       {/* Internal plugins */}
       <HistoryPlugin />
       <EditorInitializer initialContent={initialContent} onChange={onChange} />
     </LexicalComposer>
-  )
+  );
 }
-
