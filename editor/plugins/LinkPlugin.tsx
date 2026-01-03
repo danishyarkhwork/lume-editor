@@ -22,7 +22,7 @@ import {
 } from "@lexical/link";
 import { mergeRegister } from "@lexical/utils";
 import { Button } from "../ui/Button";
-import { ToolbarGroup } from "../ui/Toolbar";
+import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Modal } from "../ui/Modal";
 
 export function LinkPlugin() {
@@ -88,14 +88,17 @@ export function LinkPlugin() {
   return (
     <>
       <LexicalLinkPlugin />
-      <Button
-        onClick={handleOpenModal}
-        title="Insert Link (Ctrl+K)"
-        variant="ghost"
-        className="text-base leading-none w-9 h-9 justify-center p-0 rounded"
-      >
-        🔗
-      </Button>
+      <ToolbarGroup>
+        <Button
+          onClick={handleOpenModal}
+          title="Insert Link (Ctrl+K)"
+          variant="ghost"
+          className="text-base leading-none"
+        >
+          🔗
+        </Button>
+      </ToolbarGroup>
+      <ToolbarDivider />
 
       <Modal
         isOpen={isModalOpen}

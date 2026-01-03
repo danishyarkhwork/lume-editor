@@ -17,7 +17,7 @@ import { TablePlugin as LexicalTablePlugin } from "@lexical/react/LexicalTablePl
 import { $getSelection, $isRangeSelection } from "lexical";
 import { INSERT_TABLE_COMMAND } from "@lexical/table";
 import { Button } from "../ui/Button";
-import { ToolbarGroup } from "../ui/Toolbar";
+import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Modal } from "../ui/Modal";
 
 export function TablePlugin() {
@@ -38,14 +38,17 @@ export function TablePlugin() {
   return (
     <>
       <LexicalTablePlugin />
-      <Button
-        onClick={() => setIsModalOpen(true)}
-        title="Insert Table"
-        variant="ghost"
-        className="text-base leading-none w-9 h-9 justify-center p-0 rounded"
-      >
-        ⧉
-      </Button>
+      <ToolbarGroup>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          title="Insert Table"
+          variant="ghost"
+          className="text-base leading-none"
+        >
+          ⧉
+        </Button>
+      </ToolbarGroup>
+      <ToolbarDivider />
 
       <Modal
         isOpen={isModalOpen}

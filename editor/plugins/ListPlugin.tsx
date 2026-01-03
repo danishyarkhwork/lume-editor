@@ -26,7 +26,7 @@ import {
 } from "@lexical/list";
 import { mergeRegister } from "@lexical/utils";
 import { Button } from "../ui/Button";
-import { ToolbarGroup } from "../ui/Toolbar";
+import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 
 export function ListPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -81,13 +81,13 @@ export function ListPlugin() {
   return (
     <>
       <LexicalListPlugin />
-      <div className="flex flex-col gap-1.5 w-full">
+      <ToolbarGroup>
         <Button
           active={isBulletList}
           onClick={formatBulletList}
           title="Bullet List"
           variant="ghost"
-          className="text-lg w-9 h-9 justify-center p-0 rounded"
+          className="text-lg"
         >
           •
         </Button>
@@ -96,11 +96,12 @@ export function ListPlugin() {
           onClick={formatNumberedList}
           title="Numbered List"
           variant="ghost"
-          className="text-sm w-9 h-9 justify-center p-0 rounded"
+          className="text-sm"
         >
           1.
         </Button>
-      </div>
+      </ToolbarGroup>
+      <ToolbarDivider />
     </>
   );
 }

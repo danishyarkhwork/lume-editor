@@ -133,12 +133,10 @@ export default function Home() {
             placeholder="Start typing or press '/' for commands..."
             className="min-h-[600px]"
           >
-            {/* Horizontal toolbar - text formatting */}
+            {/* Horizontal toolbar - all formatting and content insertion */}
             <ToolbarPlugin />
             <HistoryPlugin />
             <StructurePlugin />
-
-            {/* Vertical sidebar - content insertion */}
             <ListPlugin />
             <CodeBlockPlugin />
             <ImagePlugin />

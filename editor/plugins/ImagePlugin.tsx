@@ -16,7 +16,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { $getSelection, $isRangeSelection } from "lexical";
 import { $createImageNode, ImageNode } from "../nodes/ImageNode";
 import { Button } from "../ui/Button";
-import { ToolbarGroup } from "../ui/Toolbar";
+import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Modal } from "../ui/Modal";
 
 export function ImagePlugin() {
@@ -70,14 +70,17 @@ export function ImagePlugin() {
 
   return (
     <>
-      <Button
-        onClick={() => setIsModalOpen(true)}
-        title="Insert Image"
-        variant="ghost"
-        className="text-base leading-none w-9 h-9 justify-center p-0 rounded"
-      >
-        🖼️
-      </Button>
+      <ToolbarGroup>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          title="Insert Image"
+          variant="ghost"
+          className="text-base leading-none"
+        >
+          🖼️
+        </Button>
+      </ToolbarGroup>
+      <ToolbarDivider />
 
       <Modal
         isOpen={isModalOpen}

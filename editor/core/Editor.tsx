@@ -149,10 +149,9 @@ export function Editor({
       }),
   };
 
-  // Separate children into horizontal and vertical toolbars
+  // Separate children into toolbar and other plugins
   const toolbarChildren = useMemo(() => {
-    const horizontal: React.ReactNode[] = [];
-    const vertical: React.ReactNode[] = [];
+    const toolbar: React.ReactNode[] = [];
     const other: React.ReactNode[] = [];
 
     React.Children.forEach(children, (child) => {
@@ -167,29 +166,24 @@ export function Editor({
         (typeof child.type === "function" ? child.type.name : "") ||
         "";
 
-      // Content insertion plugins go to vertical sidebar
+      // All toolbar plugins go to horizontal toolbar
       if (
+        componentName.includes("ToolbarPlugin") ||
+        componentName.includes("HistoryPlugin") ||
+        componentName.includes("StructurePlugin") ||
         componentName.includes("ListPlugin") ||
         componentName.includes("CodeBlockPlugin") ||
         componentName.includes("ImagePlugin") ||
         componentName.includes("LinkPlugin") ||
         componentName.includes("TablePlugin")
       ) {
-        vertical.push(child);
-      }
-      // Formatting plugins go to horizontal toolbar
-      else if (
-        componentName.includes("ToolbarPlugin") ||
-        componentName.includes("HistoryPlugin") ||
-        componentName.includes("StructurePlugin")
-      ) {
-        horizontal.push(child);
+        toolbar.push(child);
       } else {
         other.push(child);
       }
     });
 
-    return { horizontal, vertical, other };
+    return { toolbar, other };
   }, [children]);
 
   return (
@@ -198,18 +192,8 @@ export function Editor({
         <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden flex flex-col">
           {/* Toolbar area */}
           <div className="sticky top-0 z-10 bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
-            <div className="flex items-start">
-              {/* Vertical sidebar toolbar */}
-              {toolbarChildren.vertical.length > 0 && (
-                <div className="flex flex-col gap-1.5 p-2 border-r border-gray-200/50 dark:border-gray-800/50 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md w-12 items-center">
-                  {toolbarChildren.vertical}
-                </div>
-              )}
-
-              {/* Main horizontal toolbar */}
-              <div className="flex-1 flex items-center min-h-[44px]">
-                {toolbarChildren.horizontal}
-              </div>
+            <div className="flex items-center min-h-[44px]">
+              {toolbarChildren.toolbar}
             </div>
           </div>
 

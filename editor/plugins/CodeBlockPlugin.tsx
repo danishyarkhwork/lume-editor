@@ -26,7 +26,7 @@ import {
   getCodeLanguages,
 } from "@lexical/code";
 import { Button } from "../ui/Button";
-import { ToolbarGroup } from "../ui/Toolbar";
+import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Dropdown } from "../ui/Dropdown";
 
 const CODE_LANGUAGES = [
@@ -78,29 +78,28 @@ export function CodeBlockPlugin() {
   );
 
   return (
-    <div className="flex flex-col gap-1.5 w-full">
-      <Button
-        onClick={insertCodeBlock}
-        title="Insert Code Block"
-        variant="ghost"
-        className="text-xs font-mono w-9 h-9 justify-center p-0 rounded"
-      >
-        {"</>"}
-      </Button>
-      <Dropdown
-        options={CODE_LANGUAGES}
-        onSelect={updateCodeLanguage}
-        align="right"
-        trigger={
-          <Button
-            title="Code Language"
-            variant="ghost"
-            className="text-xs w-9 h-9 justify-center p-0 rounded"
-          >
-            Lang
-          </Button>
-        }
-      />
-    </div>
+    <>
+      <ToolbarGroup>
+        <Button
+          onClick={insertCodeBlock}
+          title="Insert Code Block"
+          variant="ghost"
+          className="text-xs font-mono"
+        >
+          {"</>"}
+        </Button>
+        <Dropdown
+          options={CODE_LANGUAGES}
+          onSelect={updateCodeLanguage}
+          align="right"
+          trigger={
+            <Button title="Code Language" variant="ghost" className="text-xs">
+              Lang
+            </Button>
+          }
+        />
+      </ToolbarGroup>
+      <ToolbarDivider />
+    </>
   );
 }
