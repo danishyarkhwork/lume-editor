@@ -216,7 +216,7 @@ export function AdvancedToolbarPlugin() {
 
   return (
     <Toolbar>
-      {/* Font Family */}
+      {/* Font Controls */}
       <ToolbarGroup>
         <Dropdown
           options={FONT_FAMILIES.map((font) => ({
@@ -240,22 +240,16 @@ export function AdvancedToolbarPlugin() {
             <Button
               title="Font Family"
               variant="ghost"
-              className="text-xs px-2 min-w-[80px] justify-between"
+              className="text-xs px-2.5 min-w-[90px] justify-between h-8"
             >
               <span className="truncate">
                 {FONT_FAMILIES.find((f) => f.value === fontFamily)?.label ||
                   "Font"}
               </span>
-              <span className="ml-1 text-gray-400">▼</span>
+              <span className="ml-1.5 text-gray-400 text-[10px]">▼</span>
             </Button>
           }
         />
-      </ToolbarGroup>
-
-      <ToolbarDivider />
-
-      {/* Font Size */}
-      <ToolbarGroup>
         <Dropdown
           options={FONT_SIZES}
           value={fontSize}
@@ -267,10 +261,10 @@ export function AdvancedToolbarPlugin() {
             <Button
               title="Font Size"
               variant="ghost"
-              className="text-xs px-2 min-w-[60px] justify-between"
+              className="text-xs px-2.5 min-w-[65px] justify-between h-8"
             >
-              <span>{fontSize || "Size"}</span>
-              <span className="ml-1 text-gray-400">▼</span>
+              <span>{fontSize || "16px"}</span>
+              <span className="ml-1.5 text-gray-400 text-[10px]">▼</span>
             </Button>
           }
         />
@@ -285,7 +279,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("bold")}
           title="Bold (Ctrl+B)"
           variant="ghost"
-          className="font-bold text-sm"
+          className="font-bold text-sm h-8 w-8"
         >
           B
         </Button>
@@ -294,7 +288,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("italic")}
           title="Italic (Ctrl+I)"
           variant="ghost"
-          className="italic text-sm"
+          className="italic text-sm h-8 w-8"
         >
           I
         </Button>
@@ -303,7 +297,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("underline")}
           title="Underline (Ctrl+U)"
           variant="ghost"
-          className="underline text-sm"
+          className="underline text-sm h-8 w-8"
         >
           U
         </Button>
@@ -312,7 +306,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("strikethrough")}
           title="Strikethrough"
           variant="ghost"
-          className="line-through text-sm"
+          className="line-through text-sm h-8 w-8"
         >
           S
         </Button>
@@ -321,7 +315,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("code")}
           title="Inline Code"
           variant="ghost"
-          className="text-xs font-mono"
+          className="text-xs font-mono h-8 w-8"
         >
           {"</>"}
         </Button>
@@ -329,7 +323,7 @@ export function AdvancedToolbarPlugin() {
 
       <ToolbarDivider />
 
-      {/* Text Alignment */}
+      {/* Indentation & Alignment */}
       <ToolbarGroup>
         {TEXT_ALIGNMENTS.map((align) => (
           <Button
@@ -338,7 +332,7 @@ export function AdvancedToolbarPlugin() {
             onClick={() => formatAlignment(align.value)}
             title={align.label}
             variant="ghost"
-            className="text-base"
+            className="text-base h-8 w-8"
           >
             {align.icon}
           </Button>
@@ -369,9 +363,9 @@ export function AdvancedToolbarPlugin() {
             <Button
               title="Text Color"
               variant="ghost"
-              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px]"
+              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px] w-auto"
             >
-              <span className="font-semibold text-sm">A</span>
+              <span className="font-semibold text-sm leading-none">A</span>
               <span
                 className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
                 style={{ backgroundColor: textColor || "transparent" }}
@@ -399,9 +393,9 @@ export function AdvancedToolbarPlugin() {
             <Button
               title="Background Color"
               variant="ghost"
-              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px]"
+              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px] w-auto"
             >
-              <span className="font-medium text-xs">BG</span>
+              <span className="font-medium text-xs leading-none">BG</span>
               <span
                 className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
                 style={{ backgroundColor: backgroundColor || "transparent" }}
@@ -413,7 +407,7 @@ export function AdvancedToolbarPlugin() {
 
       <ToolbarDivider />
 
-      {/* Line Height */}
+      {/* Typography */}
       <ToolbarGroup>
         <Dropdown
           options={LINE_HEIGHTS}
@@ -426,18 +420,12 @@ export function AdvancedToolbarPlugin() {
             <Button
               title="Line Height"
               variant="ghost"
-              className="text-xs px-2 min-w-[50px]"
+              className="text-xs px-2.5 min-w-[55px] h-8"
             >
               {lineHeight || "1.5"}
             </Button>
           }
         />
-      </ToolbarGroup>
-
-      <ToolbarDivider />
-
-      {/* Letter Spacing */}
-      <ToolbarGroup>
         <Dropdown
           options={LETTER_SPACING}
           value={letterSpacing}
@@ -449,19 +437,13 @@ export function AdvancedToolbarPlugin() {
             <Button
               title="Letter Spacing"
               variant="ghost"
-              className="text-xs px-2 min-w-[60px]"
+              className="text-xs px-2.5 min-w-[70px] h-8"
             >
               {LETTER_SPACING.find((s) => s.value === letterSpacing)?.label ||
                 "Spacing"}
             </Button>
           }
         />
-      </ToolbarGroup>
-
-      <ToolbarDivider />
-
-      {/* Text Transform */}
-      <ToolbarGroup>
         <Dropdown
           options={TEXT_TRANSFORMS}
           value={textTransform}
@@ -473,10 +455,10 @@ export function AdvancedToolbarPlugin() {
             <Button
               title="Text Transform"
               variant="ghost"
-              className="text-xs px-2 min-w-[70px]"
+              className="text-xs px-2.5 min-w-[75px] h-8"
             >
               {TEXT_TRANSFORMS.find((t) => t.value === textTransform)?.label ||
-                "Transform"}
+                "None"}
             </Button>
           }
         />

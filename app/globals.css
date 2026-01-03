@@ -22,15 +22,15 @@
   .animate-in {
     animation: fadeIn 0.2s ease-out;
   }
-  
+
   .fade-in {
     animation: fadeIn 0.2s ease-out;
   }
-  
+
   .zoom-in-95 {
     animation: zoomIn 0.2s ease-out;
   }
-  
+
   .slide-in-from-top-2 {
     animation: slideInFromTop 0.2s ease-out;
   }
