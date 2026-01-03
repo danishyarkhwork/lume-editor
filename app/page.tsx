@@ -10,6 +10,7 @@ import React, { useState, useCallback } from "react";
 import { Editor } from "@/editor";
 import {
   AdvancedToolbarPlugin,
+  FloatingToolbarPlugin,
   HistoryPlugin,
   ListPlugin,
   TablePlugin,
@@ -133,6 +134,9 @@ export default function Home() {
             placeholder="Start typing or press '/' for commands..."
             className="min-h-[600px]"
           >
+            {/* Floating toolbar - appears above selected text */}
+            <FloatingToolbarPlugin />
+
             {/* Advanced horizontal toolbar - all formatting and content insertion */}
             <AdvancedToolbarPlugin />
             <HistoryPlugin />
