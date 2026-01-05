@@ -10,6 +10,7 @@ import React, { useState, useCallback } from "react";
 import { Editor } from "@/editor";
 import {
   AdvancedToolbarPlugin,
+  FormattingSidebarPlugin,
   FloatingToolbarPlugin,
   HistoryPlugin,
   ListPlugin,
@@ -137,7 +138,10 @@ export default function Home() {
             {/* Floating toolbar - appears above selected text */}
             <FloatingToolbarPlugin />
 
-            {/* Advanced horizontal toolbar - all formatting and content insertion */}
+            {/* Formatting sidebar - vertical left sidebar for text formatting */}
+            <FormattingSidebarPlugin />
+
+            {/* Advanced horizontal toolbar - font controls and content insertion */}
             <AdvancedToolbarPlugin />
             <HistoryPlugin />
             <StructurePlugin />

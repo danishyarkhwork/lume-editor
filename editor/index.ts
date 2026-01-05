@@ -14,6 +14,7 @@ export { getEditorNodes, defaultEditorConfig } from "./core/EditorConfig";
 // Plugins
 export { ToolbarPlugin } from "./plugins/ToolbarPlugin";
 export { AdvancedToolbarPlugin } from "./plugins/AdvancedToolbarPlugin";
+export { FormattingSidebarPlugin } from "./plugins/FormattingSidebarPlugin";
 export { FloatingToolbarPlugin } from "./plugins/FloatingToolbarPlugin";
 export { HistoryPlugin } from "./plugins/HistoryPlugin";
 export { ListPlugin } from "./plugins/ListPlugin";
@@ -37,6 +38,11 @@ export type { SerializedCalloutNode, CalloutType } from "./nodes/CalloutNode";
 
 // UI Components
 export { Toolbar, ToolbarDivider, ToolbarGroup } from "./ui/Toolbar";
+export {
+  SidebarToolbar,
+  SidebarToolbarGroup,
+  SidebarToolbarDivider,
+} from "./ui/SidebarToolbar";
 export { Button } from "./ui/Button";
 export type { ButtonProps } from "./ui/Button";
 export { Dropdown } from "./ui/Dropdown";

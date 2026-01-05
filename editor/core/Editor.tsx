@@ -149,9 +149,10 @@ export function Editor({
       }),
   };
 
-  // Separate children into toolbar and other plugins
+  // Separate children into toolbar, sidebar, and other plugins
   const toolbarChildren = useMemo(() => {
     const toolbar: React.ReactNode[] = [];
+    const sidebar: React.ReactNode[] = [];
     const other: React.ReactNode[] = [];
 
     React.Children.forEach(children, (child) => {
@@ -166,10 +167,12 @@ export function Editor({
         (typeof child.type === "function" ? child.type.name : "") ||
         "";
 
-      // All toolbar plugins go to horizontal toolbar
       // FloatingToolbarPlugin should always go to "other" since it renders via portal
       if (componentName.includes("FloatingToolbarPlugin")) {
         other.push(child);
+      } else if (componentName.includes("FormattingSidebarPlugin")) {
+        // FormattingSidebarPlugin goes to sidebar (vertical left sidebar)
+        sidebar.push(child);
       } else if (componentName.includes("AdvancedToolbarPlugin")) {
         // AdvancedToolbarPlugin goes to toolbar (fixed horizontal toolbar)
         toolbar.push(child);
@@ -189,7 +192,7 @@ export function Editor({
       }
     });
 
-    return { toolbar, other };
+    return { toolbar, sidebar, other };
   }, [children]);
 
   return (
@@ -198,20 +201,30 @@ export function Editor({
         <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden flex flex-col">
           {/* Toolbar area */}
           <div className="sticky top-0 z-10 bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
-            <div className="flex items-center min-h-[44px] overflow-x-auto overflow-y-visible scrollbar-hide relative w-full">
+            <div className="flex items-start md:items-center min-h-[44px] md:min-h-[44px] overflow-x-auto overflow-y-visible scrollbar-hide relative w-full">
               {toolbarChildren.toolbar}
             </div>
           </div>
 
-          {/* Editor content area */}
-          <div className="editor-inner relative px-4 py-6 min-h-[500px] flex-1">
-            <RichTextPlugin
-              contentEditable={
-                <ContentEditable className="editor-input min-h-[450px] focus:outline-none prose prose-lg dark:prose-invert max-w-none" />
-              }
-              placeholder={<Placeholder text={placeholder} />}
-              ErrorBoundary={ErrorBoundary}
-            />
+          {/* Editor content area with sidebar */}
+          <div className="flex flex-1 overflow-hidden">
+            {/* Sidebar */}
+            {toolbarChildren.sidebar.length > 0 && (
+              <div className="hidden lg:block border-r border-gray-200/50 dark:border-gray-800/50">
+                {toolbarChildren.sidebar}
+              </div>
+            )}
+
+            {/* Editor content */}
+            <div className="editor-inner relative px-4 py-6 min-h-[500px] flex-1 overflow-y-auto">
+              <RichTextPlugin
+                contentEditable={
+                  <ContentEditable className="editor-input min-h-[450px] focus:outline-none prose prose-lg dark:prose-invert max-w-none" />
+                }
+                placeholder={<Placeholder text={placeholder} />}
+                ErrorBoundary={ErrorBoundary}
+              />
+            </div>
           </div>
         </div>
       </div>

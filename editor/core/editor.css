@@ -115,6 +115,23 @@
   @apply hover:bg-gray-500 dark:hover:bg-gray-500;
 }
 
+/* Responsive toolbar styles */
+@media (max-width: 768px) {
+  .editor-toolbar {
+    @apply flex-wrap;
+    min-height: auto !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .editor-toolbar > * {
+    @apply mb-1;
+  }
+
+  .editor-toolbar .toolbar-group {
+    @apply mb-1;
+  }
+}
+
 /* Image styles */
 .editor-root img {
   @apply rounded-xl;

@@ -8,12 +8,7 @@
 
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import {
-  $getSelection,
-  $isRangeSelection,
-  FORMAT_TEXT_COMMAND,
-  TextFormatType,
-} from "lexical";
+import { $getSelection, $isRangeSelection } from "lexical";
 import { $patchStyleText } from "@lexical/selection";
 import { mergeRegister } from "@lexical/utils";
 import { Toolbar, ToolbarDivider, ToolbarGroup } from "../ui/Toolbar";
@@ -74,75 +69,8 @@ const FONT_SIZES = [
   { label: "64px", value: "64px" },
 ];
 
-const TEXT_ALIGNMENTS = [
-  { label: "Left", value: "left", icon: <AlignLeft className="w-4 h-4" /> },
-  {
-    label: "Center",
-    value: "center",
-    icon: <AlignCenter className="w-4 h-4" />,
-  },
-  { label: "Right", value: "right", icon: <AlignRight className="w-4 h-4" /> },
-  {
-    label: "Justify",
-    value: "justify",
-    icon: <AlignJustify className="w-4 h-4" />,
-  },
-];
-
-const LINE_HEIGHTS = [
-  { label: "1.0", value: "1" },
-  { label: "1.2", value: "1.2" },
-  { label: "1.4", value: "1.4" },
-  { label: "1.5", value: "1.5" },
-  { label: "1.6", value: "1.6" },
-  { label: "1.8", value: "1.8" },
-  { label: "2.0", value: "2" },
-  { label: "2.5", value: "2.5" },
-];
-
-const LETTER_SPACING = [
-  { label: "Tight", value: "-0.05em" },
-  { label: "Normal", value: "0" },
-  { label: "Wide", value: "0.05em" },
-  { label: "Wider", value: "0.1em" },
-  { label: "Widest", value: "0.15em" },
-];
-
-const TEXT_TRANSFORMS = [
-  { label: "None", value: "none" },
-  { label: "Uppercase", value: "uppercase" },
-  { label: "Lowercase", value: "lowercase" },
-  { label: "Capitalize", value: "capitalize" },
-];
-
-const TEXT_COLORS = [
-  { label: "Default", value: "", color: "#000000" },
-  { label: "Red", value: "#ef4444", color: "#ef4444" },
-  { label: "Orange", value: "#f97316", color: "#f97316" },
-  { label: "Yellow", value: "#eab308", color: "#eab308" },
-  { label: "Green", value: "#22c55e", color: "#22c55e" },
-  { label: "Blue", value: "#3b82f6", color: "#3b82f6" },
-  { label: "Indigo", value: "#6366f1", color: "#6366f1" },
-  { label: "Purple", value: "#a855f7", color: "#a855f7" },
-  { label: "Pink", value: "#ec4899", color: "#ec4899" },
-  { label: "Rose", value: "#f43f5e", color: "#f43f5e" },
-  { label: "Gray", value: "#6b7280", color: "#6b7280" },
-  { label: "Black", value: "#000000", color: "#000000" },
-];
-
-const BACKGROUND_COLORS = [
-  { label: "None", value: "", color: "transparent" },
-  { label: "Yellow", value: "#fef08a", color: "#fef08a" },
-  { label: "Green", value: "#bbf7d0", color: "#bbf7d0" },
-  { label: "Blue", value: "#bfdbfe", color: "#bfdbfe" },
-  { label: "Pink", value: "#fce7f3", color: "#fce7f3" },
-  { label: "Purple", value: "#e9d5ff", color: "#e9d5ff" },
-  { label: "Orange", value: "#fed7aa", color: "#fed7aa" },
-  { label: "Red", value: "#fecaca", color: "#fecaca" },
-];
-
 // Color Picker Component with HTML5 color input
-function ColorPicker({
+export function ColorPicker({
   value,
   onSelect,
   trigger,
@@ -314,29 +242,12 @@ function ColorPicker({
 
 export function AdvancedToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isStrikethrough, setIsStrikethrough] = useState(false);
-  const [isCode, setIsCode] = useState(false);
   const [fontFamily, setFontFamily] = useState("");
   const [fontSize, setFontSize] = useState("");
-  const [textAlign, setTextAlign] = useState("");
-  const [lineHeight, setLineHeight] = useState("");
-  const [letterSpacing, setLetterSpacing] = useState("");
-  const [textTransform, setTextTransform] = useState("");
-  const [textColor, setTextColor] = useState("");
-  const [backgroundColor, setBackgroundColor] = useState("");
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      setIsBold(selection.hasFormat("bold"));
-      setIsItalic(selection.hasFormat("italic"));
-      setIsUnderline(selection.hasFormat("underline"));
-      setIsStrikethrough(selection.hasFormat("strikethrough"));
-      setIsCode(selection.hasFormat("code"));
-
       // Get styles from selection
       const node = selection.anchor.getNode();
       const element = node.getParent() || node;
@@ -346,12 +257,6 @@ export function AdvancedToolbarPlugin() {
           const computedStyle = window.getComputedStyle(dom);
           setFontFamily(computedStyle.fontFamily || "");
           setFontSize(computedStyle.fontSize || "");
-          setTextAlign(computedStyle.textAlign || "");
-          setLineHeight(computedStyle.lineHeight || "");
-          setLetterSpacing(computedStyle.letterSpacing || "");
-          setTextTransform(computedStyle.textTransform || "");
-          setTextColor(computedStyle.color || "");
-          setBackgroundColor(computedStyle.backgroundColor || "");
         }
       }
     }
@@ -363,21 +268,9 @@ export function AdvancedToolbarPlugin() {
         editorState.read(() => {
           updateToolbar();
         });
-      }),
-      editor.registerCommand(
-        FORMAT_TEXT_COMMAND,
-        () => {
-          updateToolbar();
-          return false;
-        },
-        1
-      )
+      })
     );
   }, [editor, updateToolbar]);
-
-  const formatText = (format: TextFormatType) => {
-    editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
-  };
 
   const formatStyle = (style: string, value: string | null) => {
     editor.update(() => {
@@ -388,25 +281,6 @@ export function AdvancedToolbarPlugin() {
         });
       }
     });
-  };
-
-  const formatAlignment = (align: string) => {
-    editor.update(() => {
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        const nodes = selection.getNodes();
-        nodes.forEach((node) => {
-          const element = node.getParent();
-          if (element) {
-            const dom = editor.getElementByKey(element.getKey());
-            if (dom) {
-              (dom as HTMLElement).style.textAlign = align;
-            }
-          }
-        });
-      }
-    });
-    setTextAlign(align);
   };
 
   return (
@@ -460,182 +334,6 @@ export function AdvancedToolbarPlugin() {
             >
               <span>{fontSize || "16px"}</span>
               <ChevronDown className="w-3 h-3 ml-1 text-gray-500 dark:text-gray-400" />
-            </Button>
-          }
-        />
-      </ToolbarGroup>
-
-      <ToolbarDivider />
-
-      {/* Text Formatting */}
-      <ToolbarGroup>
-        <Button
-          active={isBold}
-          onClick={() => formatText("bold")}
-          tooltip="Bold (Ctrl+B)"
-          variant="ghost"
-          className="h-8 w-8 rounded-md"
-        >
-          <Bold className="w-4 h-4" />
-        </Button>
-        <Button
-          active={isItalic}
-          onClick={() => formatText("italic")}
-          tooltip="Italic (Ctrl+I)"
-          variant="ghost"
-          className="h-8 w-8 rounded-md"
-        >
-          <Italic className="w-4 h-4" />
-        </Button>
-        <Button
-          active={isUnderline}
-          onClick={() => formatText("underline")}
-          tooltip="Underline (Ctrl+U)"
-          variant="ghost"
-          className="h-8 w-8 rounded-md"
-        >
-          <Underline className="w-4 h-4" />
-        </Button>
-        <Button
-          active={isStrikethrough}
-          onClick={() => formatText("strikethrough")}
-          tooltip="Strikethrough"
-          variant="ghost"
-          className="h-8 w-8 rounded-md"
-        >
-          <Strikethrough className="w-4 h-4" />
-        </Button>
-        <Button
-          active={isCode}
-          onClick={() => formatText("code")}
-          tooltip="Inline Code"
-          variant="ghost"
-          className="h-8 w-8 rounded-md"
-        >
-          <Code className="w-4 h-4" />
-        </Button>
-      </ToolbarGroup>
-
-      <ToolbarDivider />
-
-      {/* Indentation & Alignment */}
-      <ToolbarGroup>
-        {TEXT_ALIGNMENTS.map((align) => (
-          <Button
-            key={align.value}
-            active={textAlign === align.value}
-            onClick={() => formatAlignment(align.value)}
-            tooltip={align.label}
-            variant="ghost"
-            className="h-8 w-8 rounded-md"
-          >
-            {align.icon}
-          </Button>
-        ))}
-      </ToolbarGroup>
-
-      <ToolbarDivider />
-
-      {/* Colors */}
-      <ToolbarGroup>
-        <ColorPicker
-          value={textColor}
-          onSelect={(value) => {
-            formatStyle("color", value);
-            setTextColor(value);
-          }}
-          defaultColor="#000000"
-          trigger={
-            <Button
-              tooltip="Text Color"
-              variant="ghost"
-              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1 py-0.5 h-8 w-8 rounded-md"
-            >
-              <Type className="w-3.5 h-3.5" />
-              <span
-                className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
-                style={{ backgroundColor: textColor || "#000000" }}
-              />
-            </Button>
-          }
-        />
-        <ColorPicker
-          value={backgroundColor}
-          onSelect={(value) => {
-            formatStyle("background-color", value);
-            setBackgroundColor(value);
-          }}
-          defaultColor="#ffffff"
-          trigger={
-            <Button
-              tooltip="Background Color"
-              variant="ghost"
-              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1 py-0.5 h-8 w-8 rounded-md"
-            >
-              <Highlighter className="w-3.5 h-3.5" />
-              <span
-                className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
-                style={{ backgroundColor: backgroundColor || "transparent" }}
-              />
-            </Button>
-          }
-        />
-      </ToolbarGroup>
-
-      <ToolbarDivider />
-
-      {/* Typography */}
-      <ToolbarGroup>
-        <Dropdown
-          options={LINE_HEIGHTS}
-          value={lineHeight}
-          onSelect={(value) => {
-            formatStyle("line-height", value);
-            setLineHeight(value);
-          }}
-          trigger={
-            <Button
-              tooltip="Line Height"
-              variant="ghost"
-              className="text-xs px-1.5 min-w-[50px] h-8 font-medium"
-            >
-              {lineHeight || "1.5"}
-            </Button>
-          }
-        />
-        <Dropdown
-          options={LETTER_SPACING}
-          value={letterSpacing}
-          onSelect={(value) => {
-            formatStyle("letter-spacing", value);
-            setLetterSpacing(value);
-          }}
-          trigger={
-            <Button
-              tooltip="Letter Spacing"
-              variant="ghost"
-              className="text-xs px-1.5 min-w-[65px] h-8 font-medium"
-            >
-              {LETTER_SPACING.find((s) => s.value === letterSpacing)?.label ||
-                "Spacing"}
-            </Button>
-          }
-        />
-        <Dropdown
-          options={TEXT_TRANSFORMS}
-          value={textTransform}
-          onSelect={(value) => {
-            formatStyle("text-transform", value);
-            setTextTransform(value);
-          }}
-          trigger={
-            <Button
-              tooltip="Text Transform"
-              variant="ghost"
-              className="text-xs px-1.5 min-w-[70px] h-8 font-medium"
-            >
-              {TEXT_TRANSFORMS.find((t) => t.value === textTransform)?.label ||
-                "None"}
             </Button>
           }
         />
