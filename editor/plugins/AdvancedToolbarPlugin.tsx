@@ -435,13 +435,13 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Font Family"
               variant="ghost"
-              className="text-xs px-3 min-w-[100px] justify-between h-9 font-medium"
+              className="text-xs px-2 min-w-[90px] justify-between h-8 font-medium"
             >
               <span className="truncate">
                 {FONT_FAMILIES.find((f) => f.value === fontFamily)?.label ||
                   "Font"}
               </span>
-              <ChevronDown className="w-3 h-3 ml-2 text-gray-500 dark:text-gray-400" />
+              <ChevronDown className="w-3 h-3 ml-1.5 text-gray-500 dark:text-gray-400" />
             </Button>
           }
         />
@@ -456,10 +456,10 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Font Size"
               variant="ghost"
-              className="text-xs px-3 min-w-[70px] justify-between h-9 font-medium"
+              className="text-xs px-2 min-w-[60px] justify-between h-8 font-medium"
             >
               <span>{fontSize || "16px"}</span>
-              <ChevronDown className="w-3 h-3 ml-2 text-gray-500 dark:text-gray-400" />
+              <ChevronDown className="w-3 h-3 ml-1.5 text-gray-500 dark:text-gray-400" />
             </Button>
           }
         />
@@ -474,7 +474,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("bold")}
           tooltip="Bold (Ctrl+B)"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Bold className="w-4 h-4" />
         </Button>
@@ -483,7 +483,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("italic")}
           tooltip="Italic (Ctrl+I)"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Italic className="w-4 h-4" />
         </Button>
@@ -492,7 +492,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("underline")}
           tooltip="Underline (Ctrl+U)"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Underline className="w-4 h-4" />
         </Button>
@@ -501,7 +501,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("strikethrough")}
           tooltip="Strikethrough"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Strikethrough className="w-4 h-4" />
         </Button>
@@ -510,7 +510,7 @@ export function AdvancedToolbarPlugin() {
           onClick={() => formatText("code")}
           tooltip="Inline Code"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Code className="w-4 h-4" />
         </Button>
@@ -527,7 +527,7 @@ export function AdvancedToolbarPlugin() {
             onClick={() => formatAlignment(align.value)}
             tooltip={align.label}
             variant="ghost"
-            className="text-base h-9 w-9 rounded-lg"
+            className="h-8 w-8 rounded-md"
           >
             {align.icon}
           </Button>
@@ -549,11 +549,11 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Text Color"
               variant="ghost"
-              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1.5 h-auto min-h-[36px] w-auto rounded-lg"
+              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1.5 py-1 h-8 w-8 rounded-md"
             >
-              <Type className="w-4 h-4" />
+              <Type className="w-3.5 h-3.5" />
               <span
-                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0 shadow-sm"
+                className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
                 style={{ backgroundColor: textColor || "#000000" }}
               />
             </Button>
@@ -570,11 +570,11 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Background Color"
               variant="ghost"
-              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1.5 h-auto min-h-[36px] w-auto rounded-lg"
+              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1.5 py-1 h-8 w-8 rounded-md"
             >
-              <Highlighter className="w-4 h-4" />
+              <Highlighter className="w-3.5 h-3.5" />
               <span
-                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0 shadow-sm"
+                className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
                 style={{ backgroundColor: backgroundColor || "transparent" }}
               />
             </Button>
@@ -597,7 +597,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Line Height"
               variant="ghost"
-              className="text-xs px-3 min-w-[60px] h-9 font-medium"
+              className="text-xs px-2 min-w-[55px] h-8 font-medium"
             >
               {lineHeight || "1.5"}
             </Button>
@@ -614,7 +614,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Letter Spacing"
               variant="ghost"
-              className="text-xs px-3 min-w-[75px] h-9 font-medium"
+              className="text-xs px-2 min-w-[70px] h-8 font-medium"
             >
               {LETTER_SPACING.find((s) => s.value === letterSpacing)?.label ||
                 "Spacing"}
@@ -632,7 +632,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Text Transform"
               variant="ghost"
-              className="text-xs px-3 min-w-[80px] h-9 font-medium"
+              className="text-xs px-2 min-w-[75px] h-8 font-medium"
             >
               {TEXT_TRANSFORMS.find((t) => t.value === textTransform)?.label ||
                 "None"}

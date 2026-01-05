@@ -53,7 +53,7 @@ export function HistoryPlugin() {
           disabled={!canUndo}
           tooltip="Undo (Ctrl+Z)"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Undo2 className="w-4 h-4" />
         </Button>
@@ -62,7 +62,7 @@ export function HistoryPlugin() {
           disabled={!canRedo}
           tooltip="Redo (Ctrl+Shift+Z)"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Redo2 className="w-4 h-4" />
         </Button>

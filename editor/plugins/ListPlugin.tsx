@@ -88,7 +88,7 @@ export function ListPlugin() {
           onClick={formatBulletList}
           tooltip="Bullet List"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <List className="w-4 h-4" />
         </Button>
@@ -97,7 +97,7 @@ export function ListPlugin() {
           onClick={formatNumberedList}
           tooltip="Numbered List"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <ListOrdered className="w-4 h-4" />
         </Button>

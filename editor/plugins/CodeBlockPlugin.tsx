@@ -85,7 +85,7 @@ export function CodeBlockPlugin() {
           onClick={insertCodeBlock}
           tooltip="Insert Code Block"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Code2 className="w-4 h-4" />
         </Button>
@@ -94,7 +94,7 @@ export function CodeBlockPlugin() {
           onSelect={updateCodeLanguage}
           align="right"
           trigger={
-            <Button tooltip="Code Language" variant="ghost" className="h-9 w-9 rounded-lg">
+            <Button tooltip="Code Language" variant="ghost" className="h-8 w-8 rounded-md">
               <CodeIcon className="w-4 h-4" />
             </Button>
           }

@@ -76,7 +76,7 @@ export function ImagePlugin() {
           onClick={() => setIsModalOpen(true)}
           tooltip="Insert Image"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <ImageIcon className="w-4 h-4" />
         </Button>

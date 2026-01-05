@@ -94,7 +94,7 @@ export function LinkPlugin() {
           onClick={handleOpenModal}
           tooltip="Insert Link (Ctrl+K)"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <LinkIcon className="w-4 h-4" />
         </Button>

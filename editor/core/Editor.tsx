@@ -198,13 +198,13 @@ export function Editor({
         <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden flex flex-col">
           {/* Toolbar area */}
           <div className="sticky top-0 z-10 bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
-            <div className="flex items-center min-h-[56px] overflow-x-auto overflow-y-visible scrollbar-hide relative w-full">
+            <div className="flex items-center min-h-[48px] overflow-x-auto overflow-y-visible scrollbar-hide relative w-full">
               {toolbarChildren.toolbar}
             </div>
           </div>
 
           {/* Editor content area */}
-          <div className="editor-inner relative px-8 py-12 min-h-[500px] flex-1">
+          <div className="editor-inner relative px-4 py-6 min-h-[500px] flex-1">
             <RichTextPlugin
               contentEditable={
                 <ContentEditable className="editor-input min-h-[450px] focus:outline-none prose prose-lg dark:prose-invert max-w-none" />

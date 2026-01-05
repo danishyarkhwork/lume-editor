@@ -108,7 +108,7 @@ export function StructurePlugin() {
             <Button
               tooltip="Heading"
               variant="ghost"
-              className="h-9 w-9 rounded-lg"
+              className="h-8 w-8 rounded-md"
             >
               <Heading1 className="w-4 h-4" />
             </Button>
@@ -118,7 +118,7 @@ export function StructurePlugin() {
           onClick={insertQuote}
           tooltip="Insert Quote"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Quote className="w-4 h-4" />
         </Button>
@@ -126,7 +126,7 @@ export function StructurePlugin() {
           onClick={insertDivider}
           tooltip="Insert Divider"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Minus className="w-4 h-4" />
         </Button>
@@ -141,7 +141,7 @@ export function StructurePlugin() {
             insertCallout(value as "info" | "warning" | "success" | "error")
           }
           trigger={
-            <Button tooltip="Callout" variant="ghost" className="h-9 w-9 rounded-lg">
+            <Button tooltip="Callout" variant="ghost" className="h-8 w-8 rounded-md">
               <MessageSquare className="w-4 h-4" />
             </Button>
           }

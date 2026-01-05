@@ -44,7 +44,7 @@ export function TablePlugin() {
           onClick={() => setIsModalOpen(true)}
           tooltip="Insert Table"
           variant="ghost"
-          className="h-9 w-9 rounded-lg"
+          className="h-8 w-8 rounded-md"
         >
           <Table className="w-4 h-4" />
         </Button>
