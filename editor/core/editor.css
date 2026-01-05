@@ -151,20 +151,24 @@
   @apply hover:bg-gray-500 dark:hover:bg-gray-500;
 }
 
-/* Responsive toolbar styles */
+/* Responsive toolbar styles - Ensure all tools are visible on mobile */
 @media (max-width: 768px) {
   .editor-toolbar {
-    @apply flex-wrap;
-    min-height: auto !important;
+    @apply flex-nowrap;
+    min-height: 44px !important;
     padding-bottom: 0.5rem !important;
+    /* Enable smooth horizontal scrolling */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
   }
 
   .editor-toolbar > * {
-    @apply mb-1;
+    flex-shrink: 0;
   }
 
+  /* Ensure all toolbar groups are visible */
   .editor-toolbar .toolbar-group {
-    @apply mb-1;
+    flex-shrink: 0;
   }
 }
 

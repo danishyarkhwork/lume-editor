@@ -202,7 +202,7 @@ export function Editor({
         <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden flex flex-col focus:outline-none focus:border-gray-200/60 dark:focus:border-gray-800/60">
           {/* Toolbar area */}
           <div className="sticky top-0 z-10 bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
-            <div className="flex items-start md:items-center min-h-[44px] md:min-h-[44px] overflow-x-auto overflow-y-visible scrollbar-hide relative w-full">
+            <div className="flex items-center min-h-[44px] overflow-x-auto overflow-y-visible scrollbar-hide relative w-full">
               {toolbarChildren.toolbar}
             </div>
           </div>
