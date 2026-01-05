@@ -435,13 +435,13 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Font Family"
               variant="ghost"
-              className="text-xs px-2 min-w-[90px] justify-between h-8 font-medium"
+              className="text-xs px-1.5 min-w-[80px] justify-between h-8 font-medium"
             >
               <span className="truncate">
                 {FONT_FAMILIES.find((f) => f.value === fontFamily)?.label ||
                   "Font"}
               </span>
-              <ChevronDown className="w-3 h-3 ml-1.5 text-gray-500 dark:text-gray-400" />
+              <ChevronDown className="w-3 h-3 ml-1 text-gray-500 dark:text-gray-400" />
             </Button>
           }
         />
@@ -456,10 +456,10 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Font Size"
               variant="ghost"
-              className="text-xs px-2 min-w-[60px] justify-between h-8 font-medium"
+              className="text-xs px-1.5 min-w-[55px] justify-between h-8 font-medium"
             >
               <span>{fontSize || "16px"}</span>
-              <ChevronDown className="w-3 h-3 ml-1.5 text-gray-500 dark:text-gray-400" />
+              <ChevronDown className="w-3 h-3 ml-1 text-gray-500 dark:text-gray-400" />
             </Button>
           }
         />
@@ -549,7 +549,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Text Color"
               variant="ghost"
-              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1.5 py-1 h-8 w-8 rounded-md"
+              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1 py-0.5 h-8 w-8 rounded-md"
             >
               <Type className="w-3.5 h-3.5" />
               <span
@@ -570,7 +570,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Background Color"
               variant="ghost"
-              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1.5 py-1 h-8 w-8 rounded-md"
+              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1 py-0.5 h-8 w-8 rounded-md"
             >
               <Highlighter className="w-3.5 h-3.5" />
               <span
@@ -597,7 +597,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Line Height"
               variant="ghost"
-              className="text-xs px-2 min-w-[55px] h-8 font-medium"
+              className="text-xs px-1.5 min-w-[50px] h-8 font-medium"
             >
               {lineHeight || "1.5"}
             </Button>
@@ -614,7 +614,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Letter Spacing"
               variant="ghost"
-              className="text-xs px-2 min-w-[70px] h-8 font-medium"
+              className="text-xs px-1.5 min-w-[65px] h-8 font-medium"
             >
               {LETTER_SPACING.find((s) => s.value === letterSpacing)?.label ||
                 "Spacing"}
@@ -632,7 +632,7 @@ export function AdvancedToolbarPlugin() {
             <Button
               tooltip="Text Transform"
               variant="ghost"
-              className="text-xs px-2 min-w-[75px] h-8 font-medium"
+              className="text-xs px-1.5 min-w-[70px] h-8 font-medium"
             >
               {TEXT_TRANSFORMS.find((t) => t.value === textTransform)?.label ||
                 "None"}
