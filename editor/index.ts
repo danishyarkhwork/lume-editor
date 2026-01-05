@@ -15,8 +15,6 @@ export { getEditorNodes, defaultEditorConfig } from "./core/EditorConfig";
 export { ToolbarPlugin } from "./plugins/ToolbarPlugin";
 export {
   AdvancedToolbarPlugin,
-  FloatingToolbarPlugin,
-  FormattingSidebarPlugin,
   ColorPicker,
 } from "./plugins/AdvancedToolbarPlugin";
 export { HistoryPlugin } from "./plugins/HistoryPlugin";

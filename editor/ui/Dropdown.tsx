@@ -63,7 +63,7 @@ export function Dropdown({
     if (isOpen && triggerRef.current && menuRef.current) {
       const triggerRect = triggerRef.current.getBoundingClientRect();
       const menu = menuRef.current;
-      const menuWidth = 256; // w-64 = 256px
+      const menuWidth = 180; // w-45 = 180px (reduced from 256px)
 
       // Position the menu
       if (align === "right") {
@@ -112,11 +112,13 @@ export function Dropdown({
           <div
             ref={menuRef}
             className={clsx(
-              "fixed z-[100] w-64 rounded-2xl shadow-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl border border-gray-200/80 dark:border-gray-800/80",
+              "fixed z-[100] rounded-2xl shadow-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl border border-gray-200/80 dark:border-gray-800/80",
               "animate-in fade-in slide-in-from-top-2 duration-300"
             )}
             style={{
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+              width: "180px",
+              boxShadow:
+                "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
             }}
           >
             <div className="py-2" role="menu">
@@ -126,7 +128,7 @@ export function Dropdown({
                   onClick={() => !option.disabled && handleSelect(option.value)}
                   disabled={option.disabled}
                   className={clsx(
-                    "w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 rounded-xl mx-1 transition-all duration-200",
+                    "w-full text-left px-3 py-2 text-sm flex items-center gap-2 rounded-xl mx-1 transition-all duration-200",
                     "hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30",
                     "hover:scale-[1.02] active:scale-[0.98]",
                     value === option.value &&
@@ -136,7 +138,9 @@ export function Dropdown({
                   )}
                   role="menuitem"
                 >
-                  {option.icon && <span className="mr-2 shrink-0">{option.icon}</span>}
+                  {option.icon && (
+                    <span className="mr-2 shrink-0">{option.icon}</span>
+                  )}
                   <span className="truncate">{option.label}</span>
                 </button>
               ))}

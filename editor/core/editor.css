@@ -151,24 +151,56 @@
   @apply hover:bg-gray-500 dark:hover:bg-gray-500;
 }
 
-/* Responsive toolbar styles - Ensure all tools are visible on mobile */
+/* Responsive toolbar styles - Wrap into 2-3 rows on mobile */
+.editor-toolbar {
+  /* Enable smooth scrolling on all devices */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.editor-toolbar > * {
+  flex-shrink: 0;
+}
+
+/* Ensure all toolbar groups and buttons are visible */
+.editor-toolbar .toolbar-group,
+.editor-toolbar button,
+.editor-toolbar [role="button"] {
+  flex-shrink: 0;
+  min-width: fit-content;
+}
+
+/* Better spacing and alignment */
+.editor-toolbar .toolbar-group {
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-toolbar .toolbar-divider {
+  align-self: center;
+}
+
 @media (max-width: 768px) {
   .editor-toolbar {
-    @apply flex-nowrap;
-    min-height: 44px !important;
+    min-height: auto !important;
     padding-bottom: 0.5rem !important;
-    /* Enable smooth horizontal scrolling */
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+    /* Allow wrapping into 2-3 rows */
+    flex-wrap: wrap !important;
+    align-items: flex-start;
   }
 
   .editor-toolbar > * {
-    flex-shrink: 0;
+    margin-bottom: 0.25rem;
   }
 
-  /* Ensure all toolbar groups are visible */
+  /* Toolbar groups should wrap nicely */
   .editor-toolbar .toolbar-group {
-    flex-shrink: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Dividers should be hidden on mobile when wrapping */
+  .editor-toolbar .toolbar-divider {
+    display: none;
   }
 }
 
