@@ -167,7 +167,13 @@ export function Editor({
         "";
 
       // All toolbar plugins go to horizontal toolbar
-      if (
+      // FloatingToolbarPlugin should always go to "other" since it renders via portal
+      if (componentName.includes("FloatingToolbarPlugin")) {
+        other.push(child);
+      } else if (componentName.includes("AdvancedToolbarPlugin")) {
+        // AdvancedToolbarPlugin goes to toolbar (fixed horizontal toolbar)
+        toolbar.push(child);
+      } else if (
         componentName.includes("ToolbarPlugin") ||
         componentName.includes("HistoryPlugin") ||
         componentName.includes("StructurePlugin") ||
@@ -192,7 +198,7 @@ export function Editor({
         <div className="editor-container relative bg-white dark:bg-gray-950 rounded-2xl border border-gray-200/60 dark:border-gray-800/60 min-h-[500px] shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 backdrop-blur-sm overflow-hidden flex flex-col">
           {/* Toolbar area */}
           <div className="sticky top-0 z-10 bg-white/70 dark:bg-gray-950/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
-            <div className="flex items-center min-h-[48px] overflow-x-auto overflow-y-visible scrollbar-hide relative">
+            <div className="flex items-center min-h-[56px] overflow-x-auto overflow-y-visible scrollbar-hide relative w-full">
               {toolbarChildren.toolbar}
             </div>
           </div>

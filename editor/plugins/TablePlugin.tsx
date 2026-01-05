@@ -19,6 +19,7 @@ import { INSERT_TABLE_COMMAND } from "@lexical/table";
 import { Button } from "../ui/Button";
 import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Modal } from "../ui/Modal";
+import { Table } from "lucide-react";
 
 export function TablePlugin() {
   const [editor] = useLexicalComposerContext();
@@ -41,11 +42,11 @@ export function TablePlugin() {
       <ToolbarGroup>
         <Button
           onClick={() => setIsModalOpen(true)}
-          title="Insert Table"
+          tooltip="Insert Table"
           variant="ghost"
-          className="text-base leading-none"
+          className="h-9 w-9 rounded-lg"
         >
-          ⧉
+          <Table className="w-4 h-4" />
         </Button>
       </ToolbarGroup>
       <ToolbarDivider />

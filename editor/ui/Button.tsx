@@ -8,6 +8,7 @@
 
 import React from "react";
 import { clsx } from "clsx";
+import { Tooltip } from "./Tooltip";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -15,6 +16,8 @@ export interface ButtonProps
   size?: "sm" | "md" | "lg";
   active?: boolean;
   icon?: React.ReactNode;
+  tooltip?: React.ReactNode;
+  tooltipSide?: "top" | "bottom" | "left" | "right";
 }
 
 export function Button({
@@ -25,22 +28,29 @@ export function Button({
   icon,
   className,
   disabled,
+  tooltip,
+  tooltipSide = "top",
+  title,
   ...props
 }: ButtonProps) {
+  // Use tooltip if provided, otherwise fall back to title attribute
+  const tooltipContent = tooltip || title;
   const baseClasses =
-    "inline-flex items-center justify-center font-medium rounded transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-offset-1 shrink-0";
+    "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 shrink-0";
 
   const variantClasses = {
     default: clsx(
       "text-gray-700 dark:text-gray-300 bg-transparent",
-      "hover:bg-gray-100/60 dark:hover:bg-gray-800/60",
-      active && "bg-gray-200/80 dark:bg-gray-700/80",
+      "hover:bg-gray-100/80 dark:hover:bg-gray-800/80 hover:scale-105",
+      "active:scale-95 transition-transform duration-150",
+      active && "bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 text-blue-700 dark:text-blue-300 shadow-sm",
       disabled && "opacity-40 cursor-not-allowed"
     ),
     ghost: clsx(
       "text-gray-700 dark:text-gray-300 bg-transparent",
-      "hover:bg-gray-100/60 dark:hover:bg-gray-800/60",
-      active && "bg-gray-200/80 dark:bg-gray-700/80",
+      "hover:bg-gray-100/80 dark:hover:bg-gray-800/80 hover:scale-105",
+      "active:scale-95 transition-all duration-150",
+      active && "bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 text-blue-700 dark:text-blue-300 shadow-sm border border-blue-200/50 dark:border-blue-800/50",
       disabled && "opacity-40 cursor-not-allowed"
     ),
     primary: clsx(
@@ -73,7 +83,7 @@ export function Button({
     danger: "focus:ring-red-500",
   };
 
-  return (
+  const button = (
     <button
       className={clsx(
         baseClasses,
@@ -84,9 +94,21 @@ export function Button({
       )}
       disabled={disabled}
       {...props}
+      title={tooltip ? undefined : title} // Only use native title if no tooltip
     >
       {icon && <span className={children ? "mr-2" : ""}>{icon}</span>}
       {children}
     </button>
   );
+
+  // Wrap with tooltip if provided
+  if (tooltipContent && !disabled) {
+    return (
+      <Tooltip content={tooltipContent} side={tooltipSide}>
+        {button}
+      </Tooltip>
+    );
+  }
+
+  return button;
 }

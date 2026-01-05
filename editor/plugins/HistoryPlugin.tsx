@@ -18,6 +18,7 @@ import { mergeRegister } from "@lexical/utils";
 import { UNDO_COMMAND, REDO_COMMAND } from "lexical";
 import { Button } from "../ui/Button";
 import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
+import { Undo2, Redo2 } from "lucide-react";
 
 export function HistoryPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -50,20 +51,20 @@ export function HistoryPlugin() {
         <Button
           onClick={handleUndo}
           disabled={!canUndo}
-          title="Undo (Ctrl+Z)"
+          tooltip="Undo (Ctrl+Z)"
           variant="ghost"
-          className="text-base leading-none"
+          className="h-9 w-9 rounded-lg"
         >
-          ↶
+          <Undo2 className="w-4 h-4" />
         </Button>
         <Button
           onClick={handleRedo}
           disabled={!canRedo}
-          title="Redo (Ctrl+Shift+Z)"
+          tooltip="Redo (Ctrl+Shift+Z)"
           variant="ghost"
-          className="text-base leading-none"
+          className="h-9 w-9 rounded-lg"
         >
-          ↷
+          <Redo2 className="w-4 h-4" />
         </Button>
       </ToolbarGroup>
       <ToolbarDivider />

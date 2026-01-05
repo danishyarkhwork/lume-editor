@@ -18,6 +18,7 @@ import { $createImageNode, ImageNode } from "../nodes/ImageNode";
 import { Button } from "../ui/Button";
 import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Modal } from "../ui/Modal";
+import { Image as ImageIcon } from "lucide-react";
 
 export function ImagePlugin() {
   const [editor] = useLexicalComposerContext();
@@ -73,11 +74,11 @@ export function ImagePlugin() {
       <ToolbarGroup>
         <Button
           onClick={() => setIsModalOpen(true)}
-          title="Insert Image"
+          tooltip="Insert Image"
           variant="ghost"
-          className="text-base leading-none"
+          className="h-9 w-9 rounded-lg"
         >
-          🖼️
+          <ImageIcon className="w-4 h-4" />
         </Button>
       </ToolbarGroup>
       <ToolbarDivider />

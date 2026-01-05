@@ -19,6 +19,16 @@ import { $createParagraphNode } from "lexical";
 import { Button } from "../ui/Button";
 import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Dropdown } from "../ui/Dropdown";
+import {
+  Heading1,
+  Quote,
+  Minus,
+  MessageSquare,
+  Info,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 
 const HEADING_OPTIONS = [
   { label: "Paragraph", value: "paragraph" },
@@ -96,43 +106,43 @@ export function StructurePlugin() {
           onSelect={formatHeading}
           trigger={
             <Button
-              title="Heading"
+              tooltip="Heading"
               variant="ghost"
-              className="text-sm font-semibold"
+              className="h-9 w-9 rounded-lg"
             >
-              H
+              <Heading1 className="w-4 h-4" />
             </Button>
           }
         />
         <Button
           onClick={insertQuote}
-          title="Insert Quote"
+          tooltip="Insert Quote"
           variant="ghost"
-          className="text-lg leading-none"
+          className="h-9 w-9 rounded-lg"
         >
-          "
+          <Quote className="w-4 h-4" />
         </Button>
         <Button
           onClick={insertDivider}
-          title="Insert Divider"
+          tooltip="Insert Divider"
           variant="ghost"
-          className="text-lg font-light leading-none"
+          className="h-9 w-9 rounded-lg"
         >
-          —
+          <Minus className="w-4 h-4" />
         </Button>
         <Dropdown
           options={[
-            { label: "Info", value: "info", icon: "ℹ️" },
-            { label: "Warning", value: "warning", icon: "⚠️" },
-            { label: "Success", value: "success", icon: "✅" },
-            { label: "Error", value: "error", icon: "❌" },
+            { label: "Info", value: "info", icon: <Info className="w-4 h-4" /> },
+            { label: "Warning", value: "warning", icon: <AlertTriangle className="w-4 h-4" /> },
+            { label: "Success", value: "success", icon: <CheckCircle className="w-4 h-4" /> },
+            { label: "Error", value: "error", icon: <XCircle className="w-4 h-4" /> },
           ]}
           onSelect={(value) =>
             insertCallout(value as "info" | "warning" | "success" | "error")
           }
           trigger={
-            <Button title="Callout" variant="ghost" className="text-base">
-              💬
+            <Button tooltip="Callout" variant="ghost" className="h-9 w-9 rounded-lg">
+              <MessageSquare className="w-4 h-4" />
             </Button>
           }
         />

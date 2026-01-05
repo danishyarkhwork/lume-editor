@@ -43,6 +43,8 @@ export { Dropdown } from "./ui/Dropdown";
 export type { DropdownOption, DropdownProps } from "./ui/Dropdown";
 export { Modal } from "./ui/Modal";
 export type { ModalProps } from "./ui/Modal";
+export { Tooltip } from "./ui/Tooltip";
+export type { TooltipProps } from "./ui/Tooltip";
 
 // Utilities
 export { exportHtml, exportSanitizedHtml } from "./utils/exportHtml";

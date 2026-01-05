@@ -112,9 +112,12 @@ export function Dropdown({
           <div
             ref={menuRef}
             className={clsx(
-              "fixed z-[100] w-64 rounded-xl shadow-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/60 dark:border-gray-800/60",
-              "animate-in fade-in slide-in-from-top-2 duration-200"
+              "fixed z-[100] w-64 rounded-2xl shadow-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl border border-gray-200/80 dark:border-gray-800/80",
+              "animate-in fade-in slide-in-from-top-2 duration-300"
             )}
+            style={{
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+            }}
           >
             <div className="py-2" role="menu">
               {options.map((option) => (
@@ -123,17 +126,18 @@ export function Dropdown({
                   onClick={() => !option.disabled && handleSelect(option.value)}
                   disabled={option.disabled}
                   className={clsx(
-                    "w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 rounded-lg mx-1 transition-all duration-150",
-                    "hover:bg-gray-100/80 dark:hover:bg-gray-800/80",
+                    "w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 rounded-xl mx-1 transition-all duration-200",
+                    "hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30",
+                    "hover:scale-[1.02] active:scale-[0.98]",
                     value === option.value &&
-                      "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium",
+                      "bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 text-blue-700 dark:text-blue-300 font-semibold shadow-sm",
                     option.disabled && "opacity-40 cursor-not-allowed",
                     "text-gray-700 dark:text-gray-300"
                   )}
                   role="menuitem"
                 >
-                  {option.icon && <span className="mr-2">{option.icon}</span>}
-                  {option.label}
+                  {option.icon && <span className="mr-2 shrink-0">{option.icon}</span>}
+                  <span className="truncate">{option.label}</span>
                 </button>
               ))}
             </div>

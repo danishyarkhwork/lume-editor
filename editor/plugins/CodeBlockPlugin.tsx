@@ -28,6 +28,7 @@ import {
 import { Button } from "../ui/Button";
 import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Dropdown } from "../ui/Dropdown";
+import { Code2, Code as CodeIcon } from "lucide-react";
 
 const CODE_LANGUAGES = [
   { label: "Plain Text", value: "plain" },
@@ -82,19 +83,19 @@ export function CodeBlockPlugin() {
       <ToolbarGroup>
         <Button
           onClick={insertCodeBlock}
-          title="Insert Code Block"
+          tooltip="Insert Code Block"
           variant="ghost"
-          className="text-xs font-mono"
+          className="h-9 w-9 rounded-lg"
         >
-          {"</>"}
+          <Code2 className="w-4 h-4" />
         </Button>
         <Dropdown
           options={CODE_LANGUAGES}
           onSelect={updateCodeLanguage}
           align="right"
           trigger={
-            <Button title="Code Language" variant="ghost" className="text-xs">
-              Lang
+            <Button tooltip="Code Language" variant="ghost" className="h-9 w-9 rounded-lg">
+              <CodeIcon className="w-4 h-4" />
             </Button>
           }
         />

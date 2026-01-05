@@ -24,6 +24,7 @@ import { mergeRegister } from "@lexical/utils";
 import { Button } from "../ui/Button";
 import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
 import { Modal } from "../ui/Modal";
+import { Link as LinkIcon } from "lucide-react";
 
 export function LinkPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -91,11 +92,11 @@ export function LinkPlugin() {
       <ToolbarGroup>
         <Button
           onClick={handleOpenModal}
-          title="Insert Link (Ctrl+K)"
+          tooltip="Insert Link (Ctrl+K)"
           variant="ghost"
-          className="text-base leading-none"
+          className="h-9 w-9 rounded-lg"
         >
-          🔗
+          <LinkIcon className="w-4 h-4" />
         </Button>
       </ToolbarGroup>
       <ToolbarDivider />

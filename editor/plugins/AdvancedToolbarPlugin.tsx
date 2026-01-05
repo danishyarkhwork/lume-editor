@@ -6,7 +6,7 @@
  */
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   $getSelection,
@@ -19,6 +19,22 @@ import { mergeRegister } from "@lexical/utils";
 import { Toolbar, ToolbarDivider, ToolbarGroup } from "../ui/Toolbar";
 import { Button } from "../ui/Button";
 import { Dropdown } from "../ui/Dropdown";
+import { createPortal } from "react-dom";
+import { clsx } from "clsx";
+import {
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Code,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  ChevronDown,
+  Type,
+  Highlighter,
+} from "lucide-react";
 
 const FONT_FAMILIES = [
   { label: "Default", value: "", preview: "Aa" },
@@ -59,10 +75,18 @@ const FONT_SIZES = [
 ];
 
 const TEXT_ALIGNMENTS = [
-  { label: "Left", value: "left", icon: "⬅" },
-  { label: "Center", value: "center", icon: "⬌" },
-  { label: "Right", value: "right", icon: "➡" },
-  { label: "Justify", value: "justify", icon: "⬌" },
+  { label: "Left", value: "left", icon: <AlignLeft className="w-4 h-4" /> },
+  {
+    label: "Center",
+    value: "center",
+    icon: <AlignCenter className="w-4 h-4" />,
+  },
+  { label: "Right", value: "right", icon: <AlignRight className="w-4 h-4" /> },
+  {
+    label: "Justify",
+    value: "justify",
+    icon: <AlignJustify className="w-4 h-4" />,
+  },
 ];
 
 const LINE_HEIGHTS = [
@@ -116,6 +140,177 @@ const BACKGROUND_COLORS = [
   { label: "Orange", value: "#fed7aa", color: "#fed7aa" },
   { label: "Red", value: "#fecaca", color: "#fecaca" },
 ];
+
+// Color Picker Component with HTML5 color input
+function ColorPicker({
+  value,
+  onSelect,
+  trigger,
+  defaultColor = "#000000",
+}: {
+  value: string;
+  onSelect: (value: string) => void;
+  trigger: React.ReactNode;
+  defaultColor?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [tempColor, setTempColor] = useState(value || defaultColor);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const colorInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setTempColor(value || defaultColor);
+  }, [value, defaultColor]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [isOpen]);
+
+  React.useEffect(() => {
+    if (isOpen && triggerRef.current && menuRef.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const menu = menuRef.current;
+
+      // Position below trigger, aligned to left
+      const left = triggerRect.left;
+      const top = triggerRect.bottom + 8;
+
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+      menu.style.position = "fixed";
+      menu.style.zIndex = "10001";
+    }
+  }, [isOpen]);
+
+  const handleColorChange = (newColor: string) => {
+    setTempColor(newColor);
+    onSelect(newColor);
+  };
+
+  const handleClear = () => {
+    setTempColor(defaultColor);
+    onSelect("");
+    setIsOpen(false);
+  };
+
+  const colorPickerMenu =
+    isOpen && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            ref={menuRef}
+            className="fixed w-64 rounded-lg shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-200 p-4"
+          >
+            <div className="space-y-3">
+              {/* HTML5 Color Picker */}
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Color:
+                </label>
+                <div className="flex-1 flex items-center gap-2">
+                  <input
+                    ref={colorInputRef}
+                    type="color"
+                    value={tempColor || defaultColor}
+                    onChange={(e) => handleColorChange(e.target.value)}
+                    className="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={tempColor || defaultColor}
+                    onChange={(e) => {
+                      const color = e.target.value;
+                      if (/^#[0-9A-F]{6}$/i.test(color)) {
+                        handleColorChange(color);
+                      } else {
+                        setTempColor(color);
+                      }
+                    }}
+                    placeholder="#000000"
+                    className="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                  />
+                </div>
+              </div>
+
+              {/* Preset Colors */}
+              <div>
+                <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 block">
+                  Presets:
+                </label>
+                <div className="grid grid-cols-8 gap-2">
+                  {[
+                    "#000000",
+                    "#ef4444",
+                    "#f97316",
+                    "#eab308",
+                    "#22c55e",
+                    "#3b82f6",
+                    "#6366f1",
+                    "#a855f7",
+                    "#ec4899",
+                    "#f43f5e",
+                    "#6b7280",
+                    "#ffffff",
+                  ].map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => handleColorChange(color)}
+                      className="w-8 h-8 rounded border-2 border-gray-300 dark:border-gray-600 hover:scale-110 transition-transform"
+                      style={{ backgroundColor: color }}
+                      title={color}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  onClick={handleClear}
+                  className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-700 dark:text-gray-300"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )
+      : null;
+
+  return (
+    <>
+      <div className="relative inline-block" ref={dropdownRef}>
+        <div ref={triggerRef} onClick={() => setIsOpen(!isOpen)}>
+          {trigger}
+        </div>
+      </div>
+      {colorPickerMenu}
+    </>
+  );
+}
 
 export function AdvancedToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -238,15 +433,15 @@ export function AdvancedToolbarPlugin() {
           }}
           trigger={
             <Button
-              title="Font Family"
+              tooltip="Font Family"
               variant="ghost"
-              className="text-xs px-2.5 min-w-[90px] justify-between h-8"
+              className="text-xs px-3 min-w-[100px] justify-between h-9 font-medium"
             >
               <span className="truncate">
                 {FONT_FAMILIES.find((f) => f.value === fontFamily)?.label ||
                   "Font"}
               </span>
-              <span className="ml-1.5 text-gray-400 text-[10px]">▼</span>
+              <ChevronDown className="w-3 h-3 ml-2 text-gray-500 dark:text-gray-400" />
             </Button>
           }
         />
@@ -259,12 +454,12 @@ export function AdvancedToolbarPlugin() {
           }}
           trigger={
             <Button
-              title="Font Size"
+              tooltip="Font Size"
               variant="ghost"
-              className="text-xs px-2.5 min-w-[65px] justify-between h-8"
+              className="text-xs px-3 min-w-[70px] justify-between h-9 font-medium"
             >
               <span>{fontSize || "16px"}</span>
-              <span className="ml-1.5 text-gray-400 text-[10px]">▼</span>
+              <ChevronDown className="w-3 h-3 ml-2 text-gray-500 dark:text-gray-400" />
             </Button>
           }
         />
@@ -277,47 +472,47 @@ export function AdvancedToolbarPlugin() {
         <Button
           active={isBold}
           onClick={() => formatText("bold")}
-          title="Bold (Ctrl+B)"
+          tooltip="Bold (Ctrl+B)"
           variant="ghost"
-          className="font-bold text-sm h-8 w-8"
+          className="h-9 w-9 rounded-lg"
         >
-          B
+          <Bold className="w-4 h-4" />
         </Button>
         <Button
           active={isItalic}
           onClick={() => formatText("italic")}
-          title="Italic (Ctrl+I)"
+          tooltip="Italic (Ctrl+I)"
           variant="ghost"
-          className="italic text-sm h-8 w-8"
+          className="h-9 w-9 rounded-lg"
         >
-          I
+          <Italic className="w-4 h-4" />
         </Button>
         <Button
           active={isUnderline}
           onClick={() => formatText("underline")}
-          title="Underline (Ctrl+U)"
+          tooltip="Underline (Ctrl+U)"
           variant="ghost"
-          className="underline text-sm h-8 w-8"
+          className="h-9 w-9 rounded-lg"
         >
-          U
+          <Underline className="w-4 h-4" />
         </Button>
         <Button
           active={isStrikethrough}
           onClick={() => formatText("strikethrough")}
-          title="Strikethrough"
+          tooltip="Strikethrough"
           variant="ghost"
-          className="line-through text-sm h-8 w-8"
+          className="h-9 w-9 rounded-lg"
         >
-          S
+          <Strikethrough className="w-4 h-4" />
         </Button>
         <Button
           active={isCode}
           onClick={() => formatText("code")}
-          title="Inline Code"
+          tooltip="Inline Code"
           variant="ghost"
-          className="text-xs font-mono h-8 w-8"
+          className="h-9 w-9 rounded-lg"
         >
-          {"</>"}
+          <Code className="w-4 h-4" />
         </Button>
       </ToolbarGroup>
 
@@ -330,9 +525,9 @@ export function AdvancedToolbarPlugin() {
             key={align.value}
             active={textAlign === align.value}
             onClick={() => formatAlignment(align.value)}
-            title={align.label}
+            tooltip={align.label}
             variant="ghost"
-            className="text-base h-8 w-8"
+            className="text-base h-9 w-9 rounded-lg"
           >
             {align.icon}
           </Button>
@@ -343,61 +538,43 @@ export function AdvancedToolbarPlugin() {
 
       {/* Colors */}
       <ToolbarGroup>
-        <Dropdown
-          options={TEXT_COLORS.map((color) => ({
-            label: color.label,
-            value: color.value,
-            icon: (
-              <span
-                className="w-4 h-4 rounded border border-gray-300 dark:border-gray-600"
-                style={{ backgroundColor: color.color }}
-              />
-            ),
-          }))}
+        <ColorPicker
           value={textColor}
           onSelect={(value) => {
             formatStyle("color", value);
             setTextColor(value);
           }}
+          defaultColor="#000000"
           trigger={
             <Button
-              title="Text Color"
+              tooltip="Text Color"
               variant="ghost"
-              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px] w-auto"
+              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1.5 h-auto min-h-[36px] w-auto rounded-lg"
             >
-              <span className="font-semibold text-sm leading-none">A</span>
+              <Type className="w-4 h-4" />
               <span
-                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
-                style={{ backgroundColor: textColor || "transparent" }}
+                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0 shadow-sm"
+                style={{ backgroundColor: textColor || "#000000" }}
               />
             </Button>
           }
         />
-        <Dropdown
-          options={BACKGROUND_COLORS.map((color) => ({
-            label: color.label,
-            value: color.value,
-            icon: (
-              <span
-                className="w-4 h-4 rounded border border-gray-300 dark:border-gray-600"
-                style={{ backgroundColor: color.color }}
-              />
-            ),
-          }))}
+        <ColorPicker
           value={backgroundColor}
           onSelect={(value) => {
             formatStyle("background-color", value);
             setBackgroundColor(value);
           }}
+          defaultColor="#ffffff"
           trigger={
             <Button
-              title="Background Color"
+              tooltip="Background Color"
               variant="ghost"
-              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1 h-auto min-h-[32px] w-auto"
+              className="flex flex-col items-center gap-0.5 text-xs px-2 py-1.5 h-auto min-h-[36px] w-auto rounded-lg"
             >
-              <span className="font-medium text-xs leading-none">BG</span>
+              <Highlighter className="w-4 h-4" />
               <span
-                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
+                className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0 shadow-sm"
                 style={{ backgroundColor: backgroundColor || "transparent" }}
               />
             </Button>
@@ -418,9 +595,9 @@ export function AdvancedToolbarPlugin() {
           }}
           trigger={
             <Button
-              title="Line Height"
+              tooltip="Line Height"
               variant="ghost"
-              className="text-xs px-2.5 min-w-[55px] h-8"
+              className="text-xs px-3 min-w-[60px] h-9 font-medium"
             >
               {lineHeight || "1.5"}
             </Button>
@@ -435,9 +612,9 @@ export function AdvancedToolbarPlugin() {
           }}
           trigger={
             <Button
-              title="Letter Spacing"
+              tooltip="Letter Spacing"
               variant="ghost"
-              className="text-xs px-2.5 min-w-[70px] h-8"
+              className="text-xs px-3 min-w-[75px] h-9 font-medium"
             >
               {LETTER_SPACING.find((s) => s.value === letterSpacing)?.label ||
                 "Spacing"}
@@ -453,9 +630,9 @@ export function AdvancedToolbarPlugin() {
           }}
           trigger={
             <Button
-              title="Text Transform"
+              tooltip="Text Transform"
               variant="ghost"
-              className="text-xs px-2.5 min-w-[75px] h-8"
+              className="text-xs px-3 min-w-[80px] h-9 font-medium"
             >
               {TEXT_TRANSFORMS.find((t) => t.value === textTransform)?.label ||
                 "None"}

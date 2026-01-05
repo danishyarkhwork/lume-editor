@@ -27,6 +27,7 @@ import {
 import { mergeRegister } from "@lexical/utils";
 import { Button } from "../ui/Button";
 import { ToolbarGroup, ToolbarDivider } from "../ui/Toolbar";
+import { List, ListOrdered } from "lucide-react";
 
 export function ListPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -85,20 +86,20 @@ export function ListPlugin() {
         <Button
           active={isBulletList}
           onClick={formatBulletList}
-          title="Bullet List"
+          tooltip="Bullet List"
           variant="ghost"
-          className="text-lg"
+          className="h-9 w-9 rounded-lg"
         >
-          •
+          <List className="w-4 h-4" />
         </Button>
         <Button
           active={isNumberedList}
           onClick={formatNumberedList}
-          title="Numbered List"
+          tooltip="Numbered List"
           variant="ghost"
-          className="text-sm"
+          className="h-9 w-9 rounded-lg"
         >
-          1.
+          <ListOrdered className="w-4 h-4" />
         </Button>
       </ToolbarGroup>
       <ToolbarDivider />
