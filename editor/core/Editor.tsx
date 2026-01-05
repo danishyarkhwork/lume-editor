@@ -75,7 +75,7 @@ export interface EditorProps {
  */
 function Placeholder({ text }: { text?: string }) {
   return (
-    <div className="editor-placeholder absolute top-12 left-8 text-gray-400 dark:text-gray-500 pointer-events-none select-none text-lg font-normal opacity-60">
+    <div className="editor-placeholder absolute top-6 left-4 text-gray-400 dark:text-gray-500 pointer-events-none select-none text-lg font-normal opacity-60">
       {text || "Start typing..."}
     </div>
   );
