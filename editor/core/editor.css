@@ -39,6 +39,17 @@
 .editor-input {
   @apply focus:outline-none;
   @apply transition-all duration-200;
+  border: none !important;
+  outline: none !important;
+}
+
+.editor-input:focus,
+.editor-input:focus-visible,
+.editor-input:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  ring: none !important;
 }
 
 .editor-placeholder {
@@ -52,9 +63,34 @@
   @apply text-gray-900 dark:text-gray-100;
 }
 
-/* Focus styles */
-.editor-input:focus {
-  @apply outline-none;
+/* Focus styles - Remove all borders and outlines */
+.editor-inner:focus,
+.editor-inner:focus-within,
+.editor-inner:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.editor-container:focus,
+.editor-container:focus-within,
+.editor-container:active {
+  border: 1px solid rgba(229, 231, 235, 0.6) !important;
+  outline: none !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.editor-container.dark:focus,
+.editor-container.dark:focus-within {
+  border: 1px solid rgba(31, 41, 55, 0.6) !important;
+}
+
+/* Remove any default browser focus styles */
+.editor-input *:focus,
+.editor-input *:focus-visible {
+  outline: none !important;
+  border: none !important;
 }
 
 /* Smooth transitions for all editor elements */

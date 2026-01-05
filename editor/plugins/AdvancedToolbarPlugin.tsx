@@ -1,16 +1,32 @@
 /**
  * Advanced Toolbar Plugin
  *
+ * Combined plugin that includes both:
+ * - AdvancedToolbarPlugin: Horizontal toolbar with font controls
+ * - FloatingToolbarPlugin: Floating toolbar that appears above selected text
+ *
  * World-class toolbar with comprehensive formatting options.
- * Features: Font family, font size, alignment, line height, letter spacing, text transform, and more.
  */
 "use client";
 
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getSelection, $isRangeSelection } from "lexical";
+import {
+  $getSelection,
+  $isRangeSelection,
+  FORMAT_TEXT_COMMAND,
+  TextFormatType,
+  SELECTION_CHANGE_COMMAND,
+  COMMAND_PRIORITY_CRITICAL,
+} from "lexical";
 import { $patchStyleText } from "@lexical/selection";
 import { mergeRegister } from "@lexical/utils";
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import {
+  INSERT_UNORDERED_LIST_COMMAND,
+  INSERT_ORDERED_LIST_COMMAND,
+} from "@lexical/list";
+import { $createQuoteNode } from "@lexical/rich-text";
 import { Toolbar, ToolbarDivider, ToolbarGroup } from "../ui/Toolbar";
 import { Button } from "../ui/Button";
 import { Dropdown } from "../ui/Dropdown";
@@ -22,14 +38,26 @@ import {
   Underline,
   Strikethrough,
   Code,
+  Link,
+  List,
+  ListOrdered,
+  Quote,
   AlignLeft,
   AlignCenter,
   AlignRight,
   AlignJustify,
+  Indent,
+  Outdent,
   ChevronDown,
   Type,
   Highlighter,
+  CheckSquare,
 } from "lucide-react";
+import {
+  SidebarToolbar,
+  SidebarToolbarGroup,
+  SidebarToolbarDivider,
+} from "../ui/SidebarToolbar";
 
 const FONT_FAMILIES = [
   { label: "Default", value: "", preview: "Aa" },
@@ -67,6 +95,55 @@ const FONT_SIZES = [
   { label: "36px", value: "36px" },
   { label: "48px", value: "48px" },
   { label: "64px", value: "64px" },
+];
+
+const TEXT_ALIGNMENTS = [
+  { label: "Left", value: "left", icon: <AlignLeft className="w-4 h-4" /> },
+  {
+    label: "Center",
+    value: "center",
+    icon: <AlignCenter className="w-4 h-4" />,
+  },
+  { label: "Right", value: "right", icon: <AlignRight className="w-4 h-4" /> },
+  {
+    label: "Justify",
+    value: "justify",
+    icon: <AlignJustify className="w-4 h-4" />,
+  },
+];
+
+const LINE_HEIGHTS = [
+  { label: "1.0", value: "1" },
+  { label: "1.2", value: "1.2" },
+  { label: "1.4", value: "1.4" },
+  { label: "1.5", value: "1.5" },
+  { label: "1.6", value: "1.6" },
+  { label: "1.8", value: "1.8" },
+  { label: "2.0", value: "2" },
+  { label: "2.5", value: "2.5" },
+];
+
+const LETTER_SPACING = [
+  { label: "Tight", value: "-0.05em" },
+  { label: "Normal", value: "0" },
+  { label: "Wide", value: "0.05em" },
+  { label: "Wider", value: "0.1em" },
+  { label: "Widest", value: "0.15em" },
+];
+
+const TEXT_TRANSFORMS = [
+  { label: "None", value: "none" },
+  { label: "Uppercase", value: "uppercase" },
+  { label: "Lowercase", value: "lowercase" },
+  { label: "Capitalize", value: "capitalize" },
+];
+
+const PARAGRAPH_SPACING = [
+  { label: "None", value: "0" },
+  { label: "Small", value: "0.5rem" },
+  { label: "Medium", value: "1rem" },
+  { label: "Large", value: "1.5rem" },
+  { label: "XLarge", value: "2rem" },
 ];
 
 // Color Picker Component with HTML5 color input
@@ -111,7 +188,7 @@ export function ColorPicker({
     }
   }, [isOpen]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen && triggerRef.current && menuRef.current) {
       const triggerRect = triggerRef.current.getBoundingClientRect();
       const menu = menuRef.current;
@@ -138,50 +215,103 @@ export function ColorPicker({
     setIsOpen(false);
   };
 
+  // Convert hex to rgba
+  const hexToRgba = (hex: string, alpha: number = 1): string => {
+    if (!hex || hex === "transparent") return "rgba(0, 0, 0, 0)";
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+  // Convert rgba to hex
+  const rgbaToHex = (rgba: string): string => {
+    if (!rgba || rgba === "transparent") return "#000000";
+    const match = rgba.match(/\d+/g);
+    if (match && match.length >= 3) {
+      const r = parseInt(match[0]).toString(16).padStart(2, "0");
+      const g = parseInt(match[1]).toString(16).padStart(2, "0");
+      const b = parseInt(match[2]).toString(16).padStart(2, "0");
+      return `#${r}${g}${b}`;
+    }
+    return tempColor || defaultColor;
+  };
+
+  const currentColor = tempColor || defaultColor;
+  const currentRgba = hexToRgba(currentColor, 1);
+
   const colorPickerMenu =
     isOpen && typeof document !== "undefined"
       ? createPortal(
           <div
             ref={menuRef}
-            className="fixed w-64 rounded-lg shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-200 p-4"
+            className="fixed w-80 rounded-2xl shadow-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl border border-gray-200/80 dark:border-gray-700/80 animate-in fade-in slide-in-from-top-2 duration-300 p-5"
+            style={{
+              boxShadow:
+                "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+            }}
           >
-            <div className="space-y-3">
-              {/* HTML5 Color Picker */}
-              <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <div className="space-y-5">
+              {/* Color Display and Input */}
+              <div>
+                <label className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 block tracking-tight">
                   Color:
                 </label>
-                <div className="flex-1 flex items-center gap-2">
-                  <input
-                    ref={colorInputRef}
-                    type="color"
-                    value={tempColor || defaultColor}
-                    onChange={(e) => handleColorChange(e.target.value)}
-                    className="w-12 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer"
+                <div className="flex items-center gap-3">
+                  {/* Current Color Display */}
+                  <div
+                    className="w-12 h-12 rounded-xl border-2 border-gray-300/60 dark:border-gray-600/60 shrink-0 shadow-lg ring-2 ring-gray-200/50 dark:ring-gray-700/50"
+                    style={{ backgroundColor: currentColor }}
                   />
+                  {/* RGBA Input */}
                   <input
                     type="text"
-                    value={tempColor || defaultColor}
+                    value={currentRgba}
                     onChange={(e) => {
-                      const color = e.target.value;
-                      if (/^#[0-9A-F]{6}$/i.test(color)) {
-                        handleColorChange(color);
-                      } else {
-                        setTempColor(color);
+                      const rgba = e.target.value;
+                      const hex = rgbaToHex(rgba);
+                      if (hex !== currentColor) {
+                        handleColorChange(hex);
                       }
                     }}
-                    placeholder="#000000"
-                    className="flex-1 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                    className="flex-1 px-4 py-2.5 text-sm border-2 border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/50 text-gray-800 dark:text-gray-200 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                    placeholder="rgba(0, 0, 0, 1)"
                   />
+                  {/* HTML5 Color Picker */}
+                  <label className="relative cursor-pointer">
+                    <input
+                      ref={colorInputRef}
+                      type="color"
+                      value={currentColor}
+                      onChange={(e) => handleColorChange(e.target.value)}
+                      className="w-12 h-12 rounded-xl border-2 border-gray-300/60 dark:border-gray-600/60 cursor-pointer shrink-0 opacity-0 absolute"
+                      title="Pick color"
+                    />
+                    <div className="w-12 h-12 rounded-xl border-2 border-gray-300/60 dark:border-gray-600/60 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                      <svg
+                        className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+                        />
+                      </svg>
+                    </div>
+                  </label>
                 </div>
               </div>
 
               {/* Preset Colors */}
               <div>
-                <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 block">
+                <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3 block tracking-tight uppercase">
                   Presets:
                 </label>
-                <div className="grid grid-cols-8 gap-2">
+                <div className="grid grid-cols-8 gap-2.5">
                   {[
                     "#000000",
                     "#ef4444",
@@ -199,7 +329,7 @@ export function ColorPicker({
                     <button
                       key={color}
                       onClick={() => handleColorChange(color)}
-                      className="w-8 h-8 rounded border-2 border-gray-300 dark:border-gray-600 hover:scale-110 transition-transform"
+                      className="w-9 h-9 rounded-lg border-2 border-gray-300/60 dark:border-gray-600/60 hover:scale-110 hover:ring-2 hover:ring-gray-400/50 dark:hover:ring-gray-500/50 transition-all duration-200 shadow-md hover:shadow-lg"
                       style={{ backgroundColor: color }}
                       title={color}
                     />
@@ -208,16 +338,16 @@ export function ColorPicker({
               </div>
 
               {/* Actions */}
-              <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between pt-4 border-t border-gray-200/80 dark:border-gray-700/80">
                 <button
                   onClick={handleClear}
-                  className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                  className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-100/80 dark:hover:bg-gray-800/80"
                 >
                   Reset
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-700 dark:text-gray-300"
+                  className="text-sm font-semibold px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
                 >
                   Done
                 </button>
@@ -244,10 +374,28 @@ export function AdvancedToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
   const [fontFamily, setFontFamily] = useState("");
   const [fontSize, setFontSize] = useState("");
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [isCode, setIsCode] = useState(false);
+  const [textAlign, setTextAlign] = useState("");
+  const [lineHeight, setLineHeight] = useState("");
+  const [letterSpacing, setLetterSpacing] = useState("");
+  const [textTransform, setTextTransform] = useState("");
+  const [textColor, setTextColor] = useState("");
+  const [backgroundColor, setBackgroundColor] = useState("");
+  const [paragraphSpacing, setParagraphSpacing] = useState("");
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
+      setIsBold(selection.hasFormat("bold"));
+      setIsItalic(selection.hasFormat("italic"));
+      setIsUnderline(selection.hasFormat("underline"));
+      setIsStrikethrough(selection.hasFormat("strikethrough"));
+      setIsCode(selection.hasFormat("code"));
+
       // Get styles from selection
       const node = selection.anchor.getNode();
       const element = node.getParent() || node;
@@ -257,6 +405,12 @@ export function AdvancedToolbarPlugin() {
           const computedStyle = window.getComputedStyle(dom);
           setFontFamily(computedStyle.fontFamily || "");
           setFontSize(computedStyle.fontSize || "");
+          setTextAlign(computedStyle.textAlign || "");
+          setLineHeight(computedStyle.lineHeight || "");
+          setLetterSpacing(computedStyle.letterSpacing || "");
+          setTextTransform(computedStyle.textTransform || "");
+          setTextColor(computedStyle.color || "");
+          setBackgroundColor(computedStyle.backgroundColor || "");
         }
       }
     }
@@ -268,9 +422,21 @@ export function AdvancedToolbarPlugin() {
         editorState.read(() => {
           updateToolbar();
         });
-      })
+      }),
+      editor.registerCommand(
+        FORMAT_TEXT_COMMAND,
+        () => {
+          updateToolbar();
+          return false;
+        },
+        1
+      )
     );
   }, [editor, updateToolbar]);
+
+  const formatText = (format: TextFormatType) => {
+    editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
+  };
 
   const formatStyle = (style: string, value: string | null) => {
     editor.update(() => {
@@ -281,6 +447,25 @@ export function AdvancedToolbarPlugin() {
         });
       }
     });
+  };
+
+  const formatAlignment = (align: string) => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        const nodes = selection.getNodes();
+        nodes.forEach((node) => {
+          const element = node.getParent();
+          if (element) {
+            const dom = editor.getElementByKey(element.getKey());
+            if (dom) {
+              (dom as HTMLElement).style.textAlign = align;
+            }
+          }
+        });
+      }
+    });
+    setTextAlign(align);
   };
 
   return (
@@ -338,6 +523,772 @@ export function AdvancedToolbarPlugin() {
           }
         />
       </ToolbarGroup>
+
+      <ToolbarDivider />
+
+      {/* Text Formatting */}
+      <ToolbarGroup>
+        <Button
+          active={isBold}
+          onClick={() => formatText("bold")}
+          tooltip="Bold (Ctrl+B)"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <Bold className="w-4 h-4" />
+        </Button>
+        <Button
+          active={isItalic}
+          onClick={() => formatText("italic")}
+          tooltip="Italic (Ctrl+I)"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <Italic className="w-4 h-4" />
+        </Button>
+        <Button
+          active={isUnderline}
+          onClick={() => formatText("underline")}
+          tooltip="Underline (Ctrl+U)"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <Underline className="w-4 h-4" />
+        </Button>
+        <Button
+          active={isStrikethrough}
+          onClick={() => formatText("strikethrough")}
+          tooltip="Strikethrough"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <Strikethrough className="w-4 h-4" />
+        </Button>
+        <Button
+          active={isCode}
+          onClick={() => formatText("code")}
+          tooltip="Inline Code"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <Code className="w-4 h-4" />
+        </Button>
+      </ToolbarGroup>
+
+      <ToolbarDivider />
+
+      {/* Alignment */}
+      <ToolbarGroup>
+        {TEXT_ALIGNMENTS.map((align) => (
+          <Button
+            key={align.value}
+            active={textAlign === align.value}
+            onClick={() => formatAlignment(align.value)}
+            tooltip={align.label}
+            variant="ghost"
+            className="h-8 w-8 rounded-md"
+          >
+            {align.icon}
+          </Button>
+        ))}
+      </ToolbarGroup>
+
+      <ToolbarDivider />
+
+      {/* Indentation */}
+      <ToolbarGroup>
+        <Button
+          onClick={() => {
+            editor.update(() => {
+              const selection = $getSelection();
+              if ($isRangeSelection(selection)) {
+                const nodes = selection.getNodes();
+                nodes.forEach((node) => {
+                  const element = node.getParent();
+                  if (element) {
+                    const dom = editor.getElementByKey(element.getKey());
+                    if (dom) {
+                      const currentPadding = parseInt(
+                        window.getComputedStyle(dom).paddingLeft || "0"
+                      );
+                      (dom as HTMLElement).style.paddingLeft = `${
+                        currentPadding + 20
+                      }px`;
+                    }
+                  }
+                });
+              }
+            });
+          }}
+          tooltip="Indent"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <Indent className="w-4 h-4" />
+        </Button>
+        <Button
+          onClick={() => {
+            editor.update(() => {
+              const selection = $getSelection();
+              if ($isRangeSelection(selection)) {
+                const nodes = selection.getNodes();
+                nodes.forEach((node) => {
+                  const element = node.getParent();
+                  if (element) {
+                    const dom = editor.getElementByKey(element.getKey());
+                    if (dom) {
+                      const currentPadding = parseInt(
+                        window.getComputedStyle(dom).paddingLeft || "0"
+                      );
+                      (dom as HTMLElement).style.paddingLeft = `${Math.max(
+                        0,
+                        currentPadding - 20
+                      )}px`;
+                    }
+                  }
+                });
+              }
+            });
+          }}
+          tooltip="Outdent"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <Outdent className="w-4 h-4" />
+        </Button>
+      </ToolbarGroup>
+
+      <ToolbarDivider />
+
+      {/* Colors */}
+      <ToolbarGroup>
+        <ColorPicker
+          value={textColor}
+          onSelect={(value) => {
+            formatStyle("color", value);
+            setTextColor(value);
+          }}
+          defaultColor="#000000"
+          trigger={
+            <Button
+              tooltip="Text Color"
+              variant="ghost"
+              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1 py-0.5 h-8 w-8 rounded-md"
+            >
+              <Type className="w-3.5 h-3.5" />
+              <span
+                className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
+                style={{ backgroundColor: textColor || "#000000" }}
+              />
+            </Button>
+          }
+        />
+        <ColorPicker
+          value={backgroundColor}
+          onSelect={(value) => {
+            formatStyle("background-color", value);
+            setBackgroundColor(value);
+          }}
+          defaultColor="#ffffff"
+          trigger={
+            <Button
+              tooltip="Background Color"
+              variant="ghost"
+              className="flex flex-col items-center justify-center gap-0.5 text-xs px-1 py-0.5 h-8 w-8 rounded-md"
+            >
+              <Highlighter className="w-3.5 h-3.5" />
+              <span
+                className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shrink-0"
+                style={{ backgroundColor: backgroundColor || "transparent" }}
+              />
+            </Button>
+          }
+        />
+        <Button
+          onClick={() => {
+            editor.update(() => {
+              const selection = $getSelection();
+              if ($isRangeSelection(selection)) {
+                // Toggle task list - placeholder for now
+              }
+            });
+          }}
+          tooltip="Task List"
+          variant="ghost"
+          className="h-8 w-8 rounded-md"
+        >
+          <CheckSquare className="w-4 h-4" />
+        </Button>
+      </ToolbarGroup>
+
+      <ToolbarDivider />
+
+      {/* Typography */}
+      <ToolbarGroup>
+        <Dropdown
+          options={LINE_HEIGHTS}
+          value={lineHeight}
+          onSelect={(value) => {
+            formatStyle("line-height", value);
+            setLineHeight(value);
+          }}
+          trigger={
+            <Button
+              tooltip="Line Height"
+              variant="ghost"
+              className="text-xs px-1.5 min-w-[50px] h-8 font-medium"
+            >
+              {lineHeight || "1.5"}
+              <ChevronDown className="w-3 h-3 ml-1 text-gray-500 dark:text-gray-400" />
+            </Button>
+          }
+        />
+        <Dropdown
+          options={LETTER_SPACING}
+          value={letterSpacing}
+          onSelect={(value) => {
+            formatStyle("letter-spacing", value);
+            setLetterSpacing(value);
+          }}
+          trigger={
+            <Button
+              tooltip="Letter Spacing"
+              variant="ghost"
+              className="text-xs px-1.5 min-w-[65px] h-8 font-medium"
+            >
+              {LETTER_SPACING.find((s) => s.value === letterSpacing)?.label ||
+                "Spacing"}
+              <ChevronDown className="w-3 h-3 ml-1 text-gray-500 dark:text-gray-400" />
+            </Button>
+          }
+        />
+        <Dropdown
+          options={TEXT_TRANSFORMS}
+          value={textTransform}
+          onSelect={(value) => {
+            formatStyle("text-transform", value);
+            setTextTransform(value);
+          }}
+          trigger={
+            <Button
+              tooltip="Text Transform"
+              variant="ghost"
+              className="text-xs px-1.5 min-w-[70px] h-8 font-medium"
+            >
+              {TEXT_TRANSFORMS.find((t) => t.value === textTransform)?.label ||
+                "None"}
+              <ChevronDown className="w-3 h-3 ml-1 text-gray-500 dark:text-gray-400" />
+            </Button>
+          }
+        />
+        <Dropdown
+          options={PARAGRAPH_SPACING}
+          value={paragraphSpacing}
+          onSelect={(value) => {
+            editor.update(() => {
+              const selection = $getSelection();
+              if ($isRangeSelection(selection)) {
+                const nodes = selection.getNodes();
+                nodes.forEach((node) => {
+                  const element = node.getParent();
+                  if (element) {
+                    const dom = editor.getElementByKey(element.getKey());
+                    if (dom) {
+                      (dom as HTMLElement).style.marginBottom = value || "0";
+                    }
+                  }
+                });
+              }
+            });
+            setParagraphSpacing(value);
+          }}
+          trigger={
+            <Button
+              tooltip="Paragraph Spacing"
+              variant="ghost"
+              className="text-xs px-1.5 min-w-[70px] h-8 font-medium"
+            >
+              {PARAGRAPH_SPACING.find((p) => p.value === paragraphSpacing)
+                ?.label || "None"}
+              <ChevronDown className="w-3 h-3 ml-1 text-gray-500 dark:text-gray-400" />
+            </Button>
+          }
+        />
+      </ToolbarGroup>
     </Toolbar>
   );
+}
+
+export function FloatingToolbarPlugin() {
+  const [editor] = useLexicalComposerContext();
+  const [isVisible, setIsVisible] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [isCode, setIsCode] = useState(false);
+  const [isLink, setIsLink] = useState(false);
+  const [textColor, setTextColor] = useState("");
+  const [backgroundColor, setBackgroundColor] = useState("");
+  const toolbarRef = useRef<HTMLDivElement>(null);
+
+  const TEXT_COLORS = [
+    { label: "Default", value: "", color: "#000000" },
+    { label: "Red", value: "#ef4444", color: "#ef4444" },
+    { label: "Orange", value: "#f97316", color: "#f97316" },
+    { label: "Yellow", value: "#eab308", color: "#eab308" },
+    { label: "Green", value: "#22c55e", color: "#22c55e" },
+    { label: "Blue", value: "#3b82f6", color: "#3b82f6" },
+    { label: "Indigo", value: "#6366f1", color: "#6366f1" },
+    { label: "Purple", value: "#a855f7", color: "#a855f7" },
+    { label: "Pink", value: "#ec4899", color: "#ec4899" },
+    { label: "Rose", value: "#f43f5e", color: "#f43f5e" },
+    { label: "Gray", value: "#6b7280", color: "#6b7280" },
+    { label: "Black", value: "#000000", color: "#000000" },
+  ];
+
+  const BACKGROUND_COLORS = [
+    { label: "None", value: "", color: "transparent" },
+    { label: "Yellow", value: "#fef08a", color: "#fef08a" },
+    { label: "Green", value: "#bbf7d0", color: "#bbf7d0" },
+    { label: "Blue", value: "#bfdbfe", color: "#bfdbfe" },
+    { label: "Pink", value: "#fce7f3", color: "#fce7f3" },
+    { label: "Purple", value: "#e9d5ff", color: "#e9d5ff" },
+    { label: "Orange", value: "#fed7aa", color: "#fed7aa" },
+    { label: "Red", value: "#fecaca", color: "#fecaca" },
+  ];
+
+  const updateToolbar = useCallback(() => {
+    const selection = $getSelection();
+    const nativeSelection = window.getSelection();
+
+    if (
+      $isRangeSelection(selection) &&
+      !selection.isCollapsed() &&
+      nativeSelection &&
+      nativeSelection.rangeCount > 0
+    ) {
+      // Update format states
+      setIsBold(selection.hasFormat("bold"));
+      setIsItalic(selection.hasFormat("italic"));
+      setIsUnderline(selection.hasFormat("underline"));
+      setIsStrikethrough(selection.hasFormat("strikethrough"));
+      setIsCode(selection.hasFormat("code"));
+
+      // Check if selection is a link
+      const nodes = selection.getNodes();
+      const linkNode = nodes.find((node) => $isLinkNode(node));
+      setIsLink(!!linkNode);
+
+      // Get text color and background color from selection
+      try {
+        const anchorNode = selection.anchor.getNode();
+        const element = anchorNode.getParent() || anchorNode;
+        if (element) {
+          const dom = editor.getElementByKey(element.getKey());
+          if (dom) {
+            const computedStyle = window.getComputedStyle(dom);
+            const color = computedStyle.color;
+            const bgColor = computedStyle.backgroundColor;
+
+            // Convert RGB/RGBA to hex for matching
+            const rgbToHex = (rgb: string) => {
+              if (rgb.startsWith("#")) return rgb.toLowerCase();
+              const match = rgb.match(/\d+/g);
+              if (match && match.length >= 3) {
+                const r = parseInt(match[0]).toString(16).padStart(2, "0");
+                const g = parseInt(match[1]).toString(16).padStart(2, "0");
+                const b = parseInt(match[2]).toString(16).padStart(2, "0");
+                return `#${r}${g}${b}`;
+              }
+              return "";
+            };
+
+            const colorHex = rgbToHex(color);
+            const bgColorHex = rgbToHex(bgColor);
+
+            // Try to match to our color palette (with tolerance)
+            const matchedTextColor = TEXT_COLORS.find(
+              (c) => c.value && colorHex === c.value.toLowerCase()
+            );
+            const matchedBgColor = BACKGROUND_COLORS.find(
+              (c) => c.value && bgColorHex === c.value.toLowerCase()
+            );
+
+            setTextColor(matchedTextColor?.value || colorHex || "");
+            setBackgroundColor(
+              matchedBgColor?.value ||
+                (bgColorHex && bgColorHex !== "#000000" ? bgColorHex : "") ||
+                ""
+            );
+          }
+        }
+      } catch (e) {
+        // Ignore errors in color detection
+      }
+
+      // Get selection position from DOM
+      try {
+        const range = nativeSelection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+
+        if (rect && (rect.width > 0 || rect.height > 0)) {
+          // Use requestAnimationFrame to ensure DOM is ready
+          requestAnimationFrame(() => {
+            const toolbarHeight = 36; // Toolbar height
+            const offset = 10; // Distance above selection
+
+            // Center horizontally on selection
+            const left = rect.left + rect.width / 2;
+            const top = rect.top - toolbarHeight - offset;
+
+            setPosition({
+              top: Math.max(0, top + window.scrollY),
+              left: left + window.scrollX,
+            });
+
+            setIsVisible(true);
+          });
+          return;
+        }
+      } catch (e) {
+        // Selection might be invalid, hide toolbar
+      }
+    }
+
+    setIsVisible(false);
+  }, [editor]);
+
+  useEffect(() => {
+    return mergeRegister(
+      editor.registerUpdateListener(({ editorState }) => {
+        editorState.read(() => {
+          updateToolbar();
+        });
+      }),
+      editor.registerCommand(
+        SELECTION_CHANGE_COMMAND,
+        () => {
+          // Delay to ensure DOM is updated
+          setTimeout(() => {
+            editor.getEditorState().read(() => {
+              updateToolbar();
+            });
+          }, 0);
+          return false;
+        },
+        COMMAND_PRIORITY_CRITICAL
+      ),
+      editor.registerCommand(
+        FORMAT_TEXT_COMMAND,
+        () => {
+          setTimeout(() => {
+            editor.getEditorState().read(() => {
+              updateToolbar();
+            });
+          }, 0);
+          return false;
+        },
+        1
+      )
+    );
+  }, [editor, updateToolbar]);
+
+  // Also listen to native selection changes
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      editor.getEditorState().read(() => {
+        updateToolbar();
+      });
+    };
+
+    document.addEventListener("selectionchange", handleSelectionChange);
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  }, [editor, updateToolbar]);
+
+  // Update position on scroll and resize
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleScroll = () => {
+      editor.getEditorState().read(() => {
+        updateToolbar();
+      });
+    };
+
+    const handleResize = () => {
+      editor.getEditorState().read(() => {
+        updateToolbar();
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, true);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isVisible, editor, updateToolbar]);
+
+  // Recalculate position after toolbar is rendered to account for its width
+  useEffect(() => {
+    if (isVisible && toolbarRef.current) {
+      const timeout = setTimeout(() => {
+        const nativeSelection = window.getSelection();
+        if (nativeSelection && nativeSelection.rangeCount > 0) {
+          try {
+            const range = nativeSelection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            const toolbarWidth = toolbarRef.current?.offsetWidth || 0;
+
+            if (rect && toolbarWidth > 0) {
+              const toolbarHeight = 36;
+              const offset = 10;
+
+              const left = rect.left + rect.width / 2 - toolbarWidth / 2;
+              const top = rect.top - toolbarHeight - offset;
+
+              setPosition({
+                top: Math.max(0, top + window.scrollY),
+                left: left + window.scrollX,
+              });
+            }
+          } catch (e) {
+            // Ignore errors
+          }
+        }
+      }, 10);
+      return () => clearTimeout(timeout);
+    }
+  }, [isVisible]);
+
+  const formatText = (format: TextFormatType) => {
+    editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
+  };
+
+  const handleLink = useCallback(() => {
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+  }, [editor]);
+
+  const handleBulletList = useCallback(() => {
+    editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+  }, [editor]);
+
+  const handleNumberedList = useCallback(() => {
+    editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+  }, [editor]);
+
+  const handleQuote = useCallback(() => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        const quoteNode = $createQuoteNode();
+        selection.insertNodes([quoteNode]);
+      }
+    });
+  }, [editor]);
+
+  const formatTextColor = useCallback(
+    (color: string) => {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection) && !selection.isCollapsed()) {
+          $patchStyleText(selection, {
+            color: color || null,
+          });
+        }
+      });
+      setTextColor(color);
+      // Update toolbar after color change
+      setTimeout(() => {
+        editor.getEditorState().read(() => {
+          updateToolbar();
+        });
+      }, 100);
+    },
+    [editor, updateToolbar]
+  );
+
+  const formatBackgroundColor = useCallback(
+    (color: string) => {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection) && !selection.isCollapsed()) {
+          $patchStyleText(selection, {
+            "background-color": color || null,
+          });
+        }
+      });
+      setBackgroundColor(color);
+      // Update toolbar after color change
+      setTimeout(() => {
+        editor.getEditorState().read(() => {
+          updateToolbar();
+        });
+      }, 100);
+    },
+    [editor, updateToolbar]
+  );
+
+  if (!isVisible || typeof document === "undefined") return null;
+
+  const toolbarContent = (
+    <div
+      ref={toolbarRef}
+      className="fixed z-[10000] flex items-center gap-2 px-3 py-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-gray-200/80 dark:border-gray-700/80 animate-in fade-in slide-in-from-top-2 duration-300"
+      style={{
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        transform: "translateX(-50%)",
+        boxShadow:
+          "0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1)",
+      }}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <Button
+        active={isBold}
+        onClick={() => formatText("bold")}
+        tooltip="Bold ⌘B"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <Bold className="w-4 h-4" />
+      </Button>
+
+      <Button
+        active={isItalic}
+        onClick={() => formatText("italic")}
+        tooltip="Italic ⌘I"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <Italic className="w-4 h-4" />
+      </Button>
+
+      <Button
+        active={isStrikethrough}
+        onClick={() => formatText("strikethrough")}
+        tooltip="Strikethrough"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <Strikethrough className="w-4 h-4" />
+      </Button>
+
+      <Button
+        active={isUnderline}
+        onClick={() => formatText("underline")}
+        tooltip="Underline ⌘U"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <Underline className="w-4 h-4" />
+      </Button>
+
+      <div className="w-px h-7 bg-gradient-to-b from-transparent via-gray-300/60 to-transparent dark:via-gray-600/60 mx-0.5" />
+
+      <Button
+        active={isLink}
+        onClick={handleLink}
+        tooltip="Link ⌘K"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <Link className="w-4 h-4" />
+      </Button>
+
+      <Button
+        active={isCode}
+        onClick={() => formatText("code")}
+        tooltip="Code"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <Code className="w-4 h-4" />
+      </Button>
+
+      <div className="w-px h-7 bg-gradient-to-b from-transparent via-gray-300/60 to-transparent dark:via-gray-600/60 mx-0.5" />
+
+      {/* Text Color Picker */}
+      <ColorPicker
+        value={textColor}
+        onSelect={formatTextColor}
+        defaultColor="#000000"
+        trigger={
+          <Button
+            tooltip="Text Color"
+            variant="ghost"
+            className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg flex flex-col items-center justify-center gap-0.5"
+          >
+            <Type className="w-4 h-4" />
+            <span
+              className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm"
+              style={{ backgroundColor: textColor || "#000000" }}
+            />
+          </Button>
+        }
+      />
+
+      {/* Background Color Picker */}
+      <ColorPicker
+        value={backgroundColor}
+        onSelect={formatBackgroundColor}
+        defaultColor="#ffffff"
+        trigger={
+          <Button
+            tooltip="Background Color"
+            variant="ghost"
+            className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg flex flex-col items-center justify-center gap-0.5"
+          >
+            <Highlighter className="w-4 h-4" />
+            <span
+              className="w-2.5 h-2.5 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm"
+              style={{ backgroundColor: backgroundColor || "transparent" }}
+            />
+          </Button>
+        }
+      />
+
+      <div className="w-px h-7 bg-gradient-to-b from-transparent via-gray-300/60 to-transparent dark:via-gray-600/60 mx-0.5" />
+
+      <Button
+        onClick={handleBulletList}
+        tooltip="Bullet List"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <List className="w-4 h-4" />
+      </Button>
+
+      <Button
+        onClick={handleNumberedList}
+        tooltip="Numbered List"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <ListOrdered className="w-4 h-4" />
+      </Button>
+
+      <Button
+        onClick={handleQuote}
+        tooltip="Quote"
+        variant="ghost"
+        className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 rounded-lg"
+      >
+        <Quote className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+
+  return createPortal(toolbarContent, document.body);
+}
+
+// FormattingSidebarPlugin is now merged into AdvancedToolbarPlugin
+// This function is kept for backward compatibility but returns null
+export function FormattingSidebarPlugin() {
+  return null;
 }
