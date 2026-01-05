@@ -35,7 +35,7 @@ export function Toolbar({ children, className }: ToolbarProps) {
 
 export function ToolbarDivider() {
   return (
-    <div className="toolbar-divider w-px h-7 bg-gradient-to-b from-transparent via-gray-300/60 to-transparent dark:via-gray-600/60 mx-0 hidden md:block flex-shrink-0" />
+    <div className="toolbar-divider w-px h-7 bg-gradient-to-b from-transparent via-gray-300/60 to-transparent dark:via-gray-600/60 mx-0 hidden md:block flex-shrink-0 flex items-center justify-center" />
   );
 }
 

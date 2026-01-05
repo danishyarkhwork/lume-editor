@@ -132,16 +132,36 @@ export function StructurePlugin() {
         </Button>
         <Dropdown
           options={[
-            { label: "Info", value: "info", icon: <Info className="w-4 h-4" /> },
-            { label: "Warning", value: "warning", icon: <AlertTriangle className="w-4 h-4" /> },
-            { label: "Success", value: "success", icon: <CheckCircle className="w-4 h-4" /> },
-            { label: "Error", value: "error", icon: <XCircle className="w-4 h-4" /> },
+            {
+              label: "Info",
+              value: "info",
+              icon: <Info className="w-4 h-4" />,
+            },
+            {
+              label: "Warning",
+              value: "warning",
+              icon: <AlertTriangle className="w-4 h-4" />,
+            },
+            {
+              label: "Success",
+              value: "success",
+              icon: <CheckCircle className="w-4 h-4" />,
+            },
+            {
+              label: "Error",
+              value: "error",
+              icon: <XCircle className="w-4 h-4" />,
+            },
           ]}
           onSelect={(value) =>
             insertCallout(value as "info" | "warning" | "success" | "error")
           }
           trigger={
-            <Button tooltip="Callout" variant="ghost" className="h-8 w-8 rounded-md">
+            <Button
+              tooltip="Callout"
+              variant="ghost"
+              className="h-8 w-8 rounded-md"
+            >
               <MessageSquare className="w-4 h-4" />
             </Button>
           }
